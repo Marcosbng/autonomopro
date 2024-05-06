@@ -44,16 +44,16 @@ public class FacturaDb {
     private String formaDePago;
 
     @Column(name = "importe_total")
-    private Long importeTotal;
+    private float importeTotal;
 
     @Column(name = "importe_total_factura")
-    private Long importeTotalFactura;
+    private float importeTotalFactura;
 
     @Column(name = "importe_total_iva")
-    private Long importeTotalIVA;
+    private float importeTotalIVA;
 
     @Column(name = "importe_total_a_pagar")
-    private Long importeTotalAPagar;
+    private float importeTotalAPagar;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")

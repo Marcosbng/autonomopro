@@ -154,7 +154,7 @@ public class FacturasController {
             albaran.setCliente(factura.getCliente()); // cliente de la factura
             albaran.setNumeroFactura(factura.getNumeroFactura());
 
-            // Guardar el albarán en la base de datos
+            // guardar el albarán en la base de datos
             albaranService.crearAlbaran(albaran);
 
             factura.setAlbaranNumero(albaran.getNumeroAlbaran()); // no lo pongo arriba para optimizar simplemente

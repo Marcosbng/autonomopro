@@ -29,10 +29,10 @@ public class ProductoDb {
     private String nombre;
 
     @Column(name = "precio_unitario")
-    private Long precioUnitario;
+    private float precioUnitario;
 
     @Column(name = "iva")
-    private Long iva;
+    private float iva;
 
     @OneToMany(mappedBy = "producto")
     private List<LineasDb> lineasFactura;
