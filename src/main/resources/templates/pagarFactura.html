@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Pago</title>
+    <link rel="stylesheet" href="/dist/css/pagarFactura.css">
+</head>
+
+<body>
+    <div class="confirmation-container">
+        <h2>Confirmación de Pago</h2>
+        <p>¿Está seguro de que desea proceder con el pago de esta factura?</p>
+
+        <form th:action="@{'/pagarFactura/' + ${id}}" method="post">
+            <button type="submit" class="pay-button">Pagar</button>
+            <a th:href="@{'/visualizar/factura/' + ${id}}" class="cancel-button">Cancelar</a>
+        </form>
+    </div>
+</body>
+
+</html>

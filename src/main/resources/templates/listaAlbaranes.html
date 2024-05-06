@@ -1,0 +1,75 @@
+<th:block th:insert="~{/fragments/index :: parteArriba}"></th:block>
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Gestión de Albaranes</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Lista de albaranes</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Detalles de los albaranes</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Número de Albarán</th>
+                                        <th>Fecha</th>
+                                        <th>Número de Factura</th>
+                                        <th>Nombre del Cliente</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Iterar sobre la lista de albaranes y mostrar los detalles -->
+                                    <tr th:each="albaran : ${albaranes}">
+                                        <td th:text="${albaran.numeroAlbaran}"></td>
+                                        <td th:text="${albaran.fecha}"></td>
+                                        <td th:text="${albaran.numeroFactura}"></td>
+                                        <td th:text="${albaran.cliente.nombre}"></td>
+                                        <td>
+                                            <!-- Botón para descargar el PDF del albarán -->
+                                            <a th:href="@{'/descargarAlbaran/' + ${albaran.numeroAlbaran}}"
+                                                class="btn btn-primary">Descargar PDF</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+
+</div>
+
+<th:block th:insert="~{/fragments/index :: parteAbajo}"></th:block>

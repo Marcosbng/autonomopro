@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizar Factura</title>
+    <link rel="stylesheet" href="/dist/css/visualizarFactura.css">
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div class="invoice">
+            <div class="invoice-header">
+                <h2>Factura</h2>
+            </div>
+            <div class="invoice-details">
+                <p><strong>Número de Factura:</strong> <span th:text="${factura.numeroFactura}"></span></p>
+                <p><strong>Estado:</strong> <span th:text="${factura.estado}"></span></p>
+                <p><strong>Fecha de Emisión:</strong> <span th:text="${factura.fechaEmision}"></span></p>
+                <p><strong>Fecha de Vencimiento:</strong> <span th:text="${factura.fechaVencimiento}"></span></p>
+                <!-- Agrega más detalles de la factura según tu modelo -->
+            </div>
+            <table class="invoice-table">
+                <tbody>
+                    <tr>
+                        <th><strong>Forma de Pago:</strong></th>
+                        <td th:text="${factura.formaDePago}"></td>
+                    </tr>
+                    <tr>
+                        <th><strong>Importe Total:</strong></th>
+                        <td th:text="${factura.importeTotal}"></td>
+                    </tr>
+                    <tr>
+                        <th><strong>Importe Total Factura:</strong></th>
+                        <td th:text="${factura.importeTotalFactura}"></td>
+                    </tr>
+                    <tr>
+                        <th><strong>Importe Total del IVA:</strong></th>
+                        <td th:text="${factura.importeTotalIVA}"></td>
+                    </tr>
+                    <tr>
+                        <th><strong>Importe Total a Pagar:</strong></th>
+                        <td th:text="${factura.importeTotalAPagar}"></td>
+                    </tr>
+                    <tr>
+                        <th><strong>Cliente:</strong></th>
+                        <td th:text="${factura.cliente.nombre}"></td>
+                    </tr>
+                    <!-- Mostrar los productos -->
+                    <tr>
+                        <th><strong>Productos:</strong></th>
+                        <td>
+                            <ul>
+                                <th:block th:each="linea : ${factura.lineasFactura}">
+                                    <li>
+                                        <span th:text="${linea.producto.nombre}"></span> <!-- Nombre del producto -->
+                                        <span> - </span>
+                                        <span>Cantidad: <span th:text="${linea.cantidadProducto}"></span></span> <!-- Cantidad del producto -->
+                                    </li>
+                                </th:block>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="footer">
+                <div th:if="${factura.estado == 'Pagada'}" class="paid-box">Factura pagada</div>
+                <div th:if="${factura.estado == 'Pendiente'}" class="pending-box">
+                    <a th:href="@{/pagarFactura/{id}(id=${factura.numeroFactura})}" class="pay-button">Pagar Factura</a>
+                </div>
+                <!-- Botón para volver a la página listarFacturas -->
+                <div class="back-to-list-container">
+                    <a href="/listarFacturas" class="back-to-list-button">Volver atrás</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

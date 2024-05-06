@@ -1,0 +1,139 @@
+<th:block th:insert="~{/fragments/index :: parteArriba}"></th:block>
+
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Gestión de Facturas</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Formulario crear Factura</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Crear Factura</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- Formulario para crear una factura -->
+                        <form class="form-horizontal" th:action="@{/crearFactura}" method="POST">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="clienteId" class="col-sm-3 col-form-label">Cliente/Empresa</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="clienteId" name="clienteId" required>
+                                            <option value="">Seleccionar Cliente</option>
+                                            <!-- Iterar sobre la lista de clientes disponibles -->
+                                            <th:block th:each="cliente : ${clientes}">
+                                                <option th:value="${cliente.id}" th:text="${cliente.nombre}"></option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="fechaEmision" class="col-sm-3 col-form-label">Fecha de
+                                        Emisión</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" class="form-control" id="fechaEmision" name="fechaEmision"
+                                            placeholder="Fecha de Emisión" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="fechaVencimiento" class="col-sm-3 col-form-label">Fecha de
+                                        Vencimiento</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" class="form-control" id="fechaVencimiento"
+                                            name="fechaVencimiento" placeholder="Fecha de Vencimiento" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="estado" class="col-sm-3 col-form-label">Forma de Pago</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="formaDePago" name="formaDePago" required>
+                                            <option value="">Seleccionar Forma de Pago</option>
+                                            <option value="Transferencia bancaria">Transferencia bancaria</option>
+                                            <option value="Pago en efectivo">Pago en efectivo</option>
+                                            <option value="Tarjeta de crédito/débito">Tarjeta de crédito/débito</option>
+                                            <option value="Pago electrónico">Pago electrónico</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="importeTotal" class="col-sm-3 col-form-label">Importe Total</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="importeTotal" name="importeTotal"
+                                            placeholder="Importe Total" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="importeTotalFactura" class="col-sm-3 col-form-label">Importe Total de la
+                                        Factura</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="importeTotalFactura"
+                                            name="importeTotalFactura" placeholder="Importe Total de la Factura"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="importeTotalIVA" class="col-sm-3 col-form-label">Importe Total del
+                                        IVA</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="importeTotalIVA"
+                                            name="importeTotalIVA" placeholder="Importe Total del IVA" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="importeTotalAPagar" class="col-sm-3 col-form-label">Importe Total a
+                                        Pagar</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="importeTotalAPagar"
+                                            name="importeTotalAPagar" placeholder="Importe Total a Pagar" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="productos" class="col-sm-3 col-form-label">Productos:</label>
+                                    <div class="col-sm-9">
+                                        <select multiple class="form-control" id="productos" name="productos" required>
+                                            <th:block th:each="producto : ${productos}">
+                                                <option th:value="${producto.codigo}" th:text="${producto.nombre}">
+                                                </option>
+                                            </th:block>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-success">Crear Factura</button>
+                                <a href="/listarFacturas" class="btn btn-secondary">Volver</a>
+                            </div>
+                            <!-- /.card-footer -->
+                        </form>
+
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+
+<th:block th:insert="~{/fragments/index :: parteAbajo}"></th:block>

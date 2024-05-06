@@ -1,0 +1,73 @@
+<th:block th:insert="~{/fragments/index :: parteArriba}"></th:block>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar Cliente</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Modificar Cliente</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content-header -->
+
+    <!-- Formulario de modificación de cliente -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Datos del Cliente</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form role="form" th:action="@{'/modificar/cliente/' + ${cliente.id}}" method="post">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="nombre">Nombre</label>
+                                    <input type="text" class="form-control" id="nombre" name="nombre" th:value="${cliente.nombre}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nifCif">NIF/CIF</label>
+                                    <input type="text" class="form-control" id="nifCif" name="nifCif" th:value="${cliente.nifCif}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="domicilio">Domicilio</label>
+                                    <input type="text" class="form-control" id="domicilio" name="domicilio" th:value="${cliente.domicilio}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefono">Teléfono</label>
+                                    <input type="text" class="form-control" id="telefono" name="telefono" th:value="${cliente.telefono}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" th:value="${cliente.email}" required>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<th:block th:insert="~{/fragments/index :: parteAbajo}"></th:block>

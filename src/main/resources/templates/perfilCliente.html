@@ -1,0 +1,65 @@
+<th:block th:insert="~{/fragments/index :: parteArriba}"></th:block>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Perfil del Cliente</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/listarClientes">Lista de clientes</a></li>
+                        <li class="breadcrumb-item active">Perfil del cliente</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content-header -->
+
+    <!-- Detalles del cliente -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Detalles del Cliente</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Nombre:</dt>
+                                <dd class="col-sm-8" th:text="${cliente.nombre}"></dd>
+                                <dt class="col-sm-4">NIF/CIF:</dt>
+                                <dd class="col-sm-8" th:text="${cliente.nifCif}"></dd>
+                                <dt class="col-sm-4">Domicilio:</dt>
+                                <dd class="col-sm-8" th:text="${cliente.domicilio}"></dd>
+                                <dt class="col-sm-4">Teléfono:</dt>
+                                <dd class="col-sm-8" th:text="${cliente.telefono}"></dd>
+                                <dt class="col-sm-4">Email:</dt>
+                                <dd class="col-sm-8" th:text="${cliente.email}"></dd>
+                            </dl>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                    <!-- Botón Modificar -->
+                    <div class="row mb-3">
+                        <div class="col-sm-12 pl-3">
+                            <a th:href="@{'/modificar/cliente/' + ${cliente.id}}" class="btn btn-primary">Modificar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+
+
+</div>
+
+<th:block th:insert="~{/fragments/index :: parteAbajo}"></th:block>

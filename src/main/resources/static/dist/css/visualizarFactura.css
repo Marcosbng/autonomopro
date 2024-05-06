@@ -1,0 +1,121 @@
+/* Estilos CSS para la factura */
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.invoice-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.invoice {
+    width: 80%;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.invoice-header {
+    background-color: #7d8083;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.invoice-header h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.invoice-details {
+    padding: 20px;
+}
+
+.invoice-details p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.invoice-table th,
+.invoice-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+}
+
+.invoice-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #333333;
+}
+
+.invoice-table td {
+    background-color: #ffffff;
+    color: #666666;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 20px 0;
+    border-radius: 0 0 10px 10px;
+}
+
+.pay-button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.pay-button:hover {
+    background-color: #0056b3;
+}
+
+.paid-box {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.back-to-list-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-to-list-button {
+    padding: 10px 20px;
+    background-color: #8f8f8f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.back-to-list-button:hover {
+    background-color: #45a049;
+}

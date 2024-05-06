@@ -1,0 +1,83 @@
+<th:block th:insert="~{/fragments/index :: parteArriba}"></th:block>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Gestión de Clientes</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Lista de clientes</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content-header -->
+
+    <!-- Tabla de clientes -->
+    <section class="content">
+        <!-- Botón para crear cliente -->
+        <div class="row mb-3">
+            <div class="col-sm-12 pl-3">
+                <a href="/crear" class="btn btn-primary">Crear Cliente</a>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Detalles de los clientes</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-0">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>NIF/CIF</th>
+                                        <th>Email</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Iterar sobre la lista de clientes y mostrar los detalles -->
+                                    <tr th:each="cliente : ${clientes}">
+                                        <td th:text="${cliente.nombre}"></td>
+                                        <td th:text="${cliente.nifCif}"></td>
+                                        <td th:text="${cliente.email}"></td>
+                                        <td>
+                                            <a th:href="@{'/eliminar/cliente/' + ${cliente.id}}"
+                                                class="btn btn-danger">Eliminar</a>
+                                            <!-- Botón Eliminar -->
+                                            <a th:href="@{'/perfil/cliente/' + ${cliente.id}}"
+                                                class="btn btn-primary">Perfil Cliente</a>
+                                            <a th:href="@{'/facturas/cliente/' + ${cliente.id}}"
+                                                class="btn btn-info">Facturas</a>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+
+
+<th:block th:insert="~{/fragments/index :: parteAbajo}"></th:block>
