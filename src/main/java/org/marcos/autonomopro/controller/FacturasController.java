@@ -61,8 +61,8 @@ public class FacturasController {
 
     @PostMapping("/crearFactura")
     public String crearFactura(@ModelAttribute("factura") FacturaDb factura, @RequestParam("clienteId") Long clienteId,
-            @RequestParam("productos") List<Long> productosCodigos, BindingResult result,
-            RedirectAttributes attributes) {
+            @RequestParam("productos") List<Long> productosCodigos, @RequestParam("importeTotal") float importeTotal,
+            BindingResult result, RedirectAttributes attributes) {
 
         // obtener el cliente por su id
         ClienteDb cliente = clienteService.obtenerClientePorId(clienteId);
@@ -71,6 +71,14 @@ public class FacturasController {
         factura.setNumeroFactura(facturaService.generarNumeroFactura());
         factura.setCliente(cliente);
         factura.setEstado("Pendiente");
+
+        // calcular el importe total del IVA (21%)
+        float importeTotalIVA = importeTotal * 0.21f;
+        factura.setImporteTotalIVA(importeTotalIVA);
+
+        // calcular el importe total a pagar (importe total + importe total del IVA)
+        float importeTotalAPagar = importeTotal + importeTotalIVA;
+        factura.setImporteTotalAPagar(importeTotalAPagar);
 
         // crear la factura y guardarla en la base de datos
         facturaService.crearFactura(factura);
@@ -174,5 +182,6 @@ public class FacturasController {
     }
 
     // Modificar factura que no este aun pagada con su albaran
+    // productos
 
 }

@@ -46,9 +46,6 @@ public class FacturaDb {
     @Column(name = "importe_total")
     private float importeTotal;
 
-    @Column(name = "importe_total_factura")
-    private float importeTotalFactura;
-
     @Column(name = "importe_total_iva")
     private float importeTotalIVA;
 
@@ -59,17 +56,10 @@ public class FacturaDb {
     @JoinColumn(name = "cliente_id")
     private ClienteDb cliente;
 
-    /*@Column(name = "producto_codigo")
-    private Long productoCodigo;*/
-
     @Column(name = "albaran_numero")
     private String albaranNumero;
 
     @OneToMany(mappedBy = "factura")
     private List<LineasDb> lineasFactura;
-
-    /*@OneToOne
-    @JoinColumn(name = "albaran_numero")
-    private AlbaranDb albaran; Comentado porque tenia esto, pero para pasarle el albaran_numero a factura, que es string, no queria pasarle la entidad AlbaranDb*/
     
 }

@@ -57,29 +57,29 @@ public class FacturaService {
     }
 
     public List<FacturaDb> obtenerFacturasVencidas(Date fechaActual) {
-        // Utiliza el repositorio de facturas para obtener las facturas con fecha de vencimiento anterior a la fecha actual
+        // utiliza el repositorio de facturas para obtener las facturas con fecha de vencimiento anterior a la fecha actual
         return facturaRepository.findByFechaVencimientoBeforeAndEstado(fechaActual, "Pendiente");
     }
 
     public String generarNumeroFactura() {
-        // Obtiene la fecha actual
+        // obtiene la fecha actual
         SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
         String fechaActual = sdf.format(new Date());
     
-        // Busca la última factura creada en la base de datos
+        // busca la última factura creada en la base de datos
         Optional<FacturaDb> ultimaFactura = facturaRepository.findTopByOrderByNumeroFacturaDesc();
     
         int numeroSecuencial;
         if (ultimaFactura.isPresent()) {
-            // Obtiene el número secuencial de la última factura y lo incrementa en 1
+            // obtiene el número secuencial de la última factura y lo incrementa en 1
             String ultimoNumero = ultimaFactura.get().getNumeroFactura().split("-")[1]; // Separa el número de la fecha
             numeroSecuencial = Integer.parseInt(ultimoNumero) + 1;
         } else {
-            // Si no hay facturas en la base de datos, comienza desde 1
+            // si no hay facturas en la base de datos, comienza desde 1
             numeroSecuencial = 1;
         }
     
-        // Formatea el número secuencial con ceros a la izquierda
+        // formatea el número secuencial con ceros a la izquierda
         String numeroFormateado = String.format(FORMATO_NUMERO, fechaActual, numeroSecuencial);
     
         return numeroFormateado;

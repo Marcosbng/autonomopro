@@ -33,9 +33,6 @@ public class AlbaranDb {
     @Column(name = "numero_factura")
     private String numeroFactura;
 
-    @Column(name = "codigo_producto")
-    private Long codigoProducto;
-
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private ClienteDb cliente;
