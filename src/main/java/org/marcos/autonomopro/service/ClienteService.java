@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClienteService {
 
+    private final ClientesRepository clientesRepository;
+
     @Autowired
-    private ClientesRepository clientesRepository;
+    public ClienteService(ClientesRepository clientesRepository) {
+        this.clientesRepository = clientesRepository;
+    }
 
     // método obtener lista de clientes
     public List<ClienteDb> getListaClientes() {
