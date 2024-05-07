@@ -32,4 +32,14 @@ public class ProductoService {
         Optional<ProductoDb> productoOptional = productosRepository.findByCodigo(codigo);
         return productoOptional.orElse(null);
     }
+
+    // método eliminar un producto por código
+    public void eliminarProductoPorCodigo(Long codigo) {
+        productosRepository.deleteById(codigo);
+    }
+
+    // método actualizar producto
+    public void actualizarProducto(ProductoDb producto) {
+        productosRepository.save(producto);
+    }
 }

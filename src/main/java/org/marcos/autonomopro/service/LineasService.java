@@ -27,4 +27,9 @@ public class LineasService {
             lineasRepository.delete(linea);
         }
     }
+
+    public boolean existeProductoEnFactura(Long codigoProducto) {
+        // verificar si existe alguna línea que utilice el producto
+        return lineasRepository.existsByProductoCodigo(codigoProducto);
+    }
 }

@@ -19,6 +19,11 @@
     </section>
     <!-- /.content-header -->
 
+    <!-- Mostrar mensaje de error si existe -->
+    <div th:if="${mensajeError != null}" class="alert alert-danger" role="alert">
+        <span th:text="${mensajeError}"></span>
+    </div>
+
     <!-- Tabla de productos -->
     <section class="content">
         <!-- Botón para crear producto -->
