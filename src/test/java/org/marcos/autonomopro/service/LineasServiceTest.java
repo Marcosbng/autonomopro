@@ -1,5 +1,7 @@
 package org.marcos.autonomopro.service;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,5 +46,31 @@ public class LineasServiceTest {
         lineasService.eliminarLineasPorNumeroFactura(numeroFactura);
         verify(lineasRepository, times(2)).delete(lineas.get(0));
         verify(lineasRepository, times(2)).delete(lineas.get(1));
+    }
+
+    @Test
+    void existeProductoEnFactura_ProductoExistente_DeberiaRetornarTrue() {
+        // Arrange
+        Long codigoProducto = 123L;
+        when(lineasRepository.existsByProductoCodigo(codigoProducto)).thenReturn(true);
+
+        // Act
+        boolean resultado = lineasService.existeProductoEnFactura(codigoProducto);
+
+        // Assert
+        assertTrue(resultado);
+    }
+
+    @Test
+    void existeProductoEnFactura_ProductoNoExistente_DeberiaRetornarFalse() {
+        // Arrange
+        Long codigoProducto = 456L;
+        when(lineasRepository.existsByProductoCodigo(codigoProducto)).thenReturn(false);
+
+        // Act
+        boolean resultado = lineasService.existeProductoEnFactura(codigoProducto);
+
+        // Assert
+        assertFalse(resultado);
     }
 }

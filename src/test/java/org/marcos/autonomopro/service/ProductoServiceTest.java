@@ -2,6 +2,8 @@ package org.marcos.autonomopro.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,5 +60,36 @@ public class ProductoServiceTest {
         ProductoDb productoObtenido = productoService.obtenerProductoPorCodigo(codigo);
         assertNotNull(productoObtenido);
         assertEquals(codigo, productoObtenido.getCodigo());
+    }
+
+    @Test
+    void eliminarProductoPorCodigo_ProductoExistente_DeberiaEliminarlo() {
+        // Arrange
+        Long codigoProducto = 123L;
+        doNothing().when(productosRepository).deleteById(codigoProducto);
+
+        // Act
+        productoService.eliminarProductoPorCodigo(codigoProducto);
+
+        // Assert
+        verify(productosRepository, times(1)).deleteById(codigoProducto);
+    }
+
+    @Test
+    void actualizarProducto_ProductoExistente_DeberiaActualizarlo() {
+        // Arrange
+        ProductoDb producto = new ProductoDb();
+        producto.setCodigo(123L);
+        producto.setNombre("Producto de prueba");
+        producto.setPrecioUnitario(10.0f);
+        producto.setIva(0.21f);
+        
+        when(productosRepository.save(any(ProductoDb.class))).thenReturn(producto);
+
+        // Act
+        productoService.actualizarProducto(producto);
+
+        // Assert
+        verify(productosRepository, times(1)).save(producto);
     }
 }
