@@ -3,6 +3,7 @@ package org.marcos.autonomopro.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.marcos.autonomopro.exception.ProductoNotFoundException;
 import org.marcos.autonomopro.model.db.ClienteDb;
 import org.marcos.autonomopro.model.db.ProductoDb;
 import org.marcos.autonomopro.repository.ClientesRepository;
@@ -41,5 +42,15 @@ public class ProductoService {
     // método actualizar producto
     public void actualizarProducto(ProductoDb producto) {
         productosRepository.save(producto);
+    }
+
+    public float obtenerPrecioProducto(Long codigoProducto) {
+        Optional<ProductoDb> optionalProducto = productosRepository.findByCodigo(codigoProducto);
+        if (optionalProducto.isPresent()) {
+            ProductoDb producto = optionalProducto.get();
+            return producto.getPrecioUnitario();
+        } else {
+            throw new ProductoNotFoundException("No se encontró el producto con el código: " + codigoProducto);
+        }
     }
 }

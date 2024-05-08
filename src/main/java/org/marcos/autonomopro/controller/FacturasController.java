@@ -60,47 +60,49 @@ public class FacturasController {
     }
 
     @PostMapping("/crearFactura")
-public String crearFactura(@ModelAttribute("factura") FacturaDb factura, @RequestParam("clienteId") Long clienteId,
-        @RequestParam("productos") List<Long> productosCodigos, @RequestParam("cantidades") List<Integer> cantidades,
-        @RequestParam("importeTotal") float importeTotal, BindingResult result, RedirectAttributes attributes) {
+    public String crearFactura(@ModelAttribute("factura") FacturaDb factura, @RequestParam("clienteId") Long clienteId,
+            @RequestParam("productos") List<Long> productosCodigos,
+            @RequestParam("cantidades") List<Integer> cantidades,
+            BindingResult result, RedirectAttributes attributes) {
 
-    // obtener el cliente por su id
-    ClienteDb cliente = clienteService.obtenerClientePorId(clienteId);
+        // obtener el cliente por su id
+        ClienteDb cliente = clienteService.obtenerClientePorId(clienteId);
 
-    // asignar el cliente y el estado a la factura
-    factura.setNumeroFactura(facturaService.generarNumeroFactura());
-    factura.setCliente(cliente);
-    factura.setEstado("Pendiente");
+        // asignar el cliente y el estado a la factura
+        factura.setNumeroFactura(facturaService.generarNumeroFactura());
+        factura.setCliente(cliente);
+        factura.setEstado("Pendiente");
 
-    // calcular el importe total del IVA (21%)
-    float importeTotalIVA = importeTotal * 0.21f;
-    factura.setImporteTotalIVA(importeTotalIVA);
+        // calcular y asignar el importe total
+        float importeTotal = facturaService.calcularImporteTotal(productosCodigos, cantidades);
+        factura.setImporteTotal(importeTotal);
+        // calcular el importe total del IVA (21%)
+        float importeTotalIVA = importeTotal * 0.21f;
+        factura.setImporteTotalIVA(importeTotalIVA);
+        // calcular el importe total a pagar (importe total + importe total del IVA)
+        float importeTotalAPagar = importeTotal + importeTotalIVA;
+        factura.setImporteTotalAPagar(importeTotalAPagar);
 
-    // calcular el importe total a pagar (importe total + importe total del IVA)
-    float importeTotalAPagar = importeTotal + importeTotalIVA;
-    factura.setImporteTotalAPagar(importeTotalAPagar);
+        // crear la factura y guardarla en la base de datos
+        facturaService.crearFactura(factura);
 
-    // crear la factura y guardarla en la base de datos
-    facturaService.crearFactura(factura);
+        // asignar los productos y sus cantidades a la factura
+        for (int i = 0; i < productosCodigos.size(); i++) {
+            Long productoCodigo = productosCodigos.get(i);
+            Integer cantidad = cantidades.get(i);
 
-    // asignar los productos y sus cantidades a la factura
-    for (int i = 0; i < productosCodigos.size(); i++) {
-        Long productoCodigo = productosCodigos.get(i);
-        Integer cantidad = cantidades.get(i);
+            ProductoDb producto = productoService.obtenerProductoPorCodigo(productoCodigo);
+            LineasDb linea = new LineasDb();
+            linea.setFactura(factura);
+            linea.setProducto(producto);
+            linea.setCantidadProducto(cantidad);
+            // guardar la línea de factura en la base de datos
+            lineasService.crearLinea(linea);
+        }
 
-        ProductoDb producto = productoService.obtenerProductoPorCodigo(productoCodigo);
-        LineasDb linea = new LineasDb();
-        linea.setFactura(factura);
-        linea.setProducto(producto);
-        linea.setCantidadProducto(cantidad);
-        // guardar la línea de factura en la base de datos
-        lineasService.crearLinea(linea);
+        attributes.addFlashAttribute("mensaje", "Factura creada exitosamente");
+        return "redirect:/listarFacturas";
     }
-
-    attributes.addFlashAttribute("mensaje", "Factura creada exitosamente");
-    return "redirect:/listarFacturas";
-}
-
 
     @GetMapping("/visualizar/factura/{numeroFactura}")
     public String visualizarFactura(@PathVariable String numeroFactura, Model model) {

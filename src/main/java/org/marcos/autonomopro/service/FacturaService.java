@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.marcos.autonomopro.model.db.FacturaDb;
 import org.marcos.autonomopro.repository.FacturasRepository;
+import org.marcos.autonomopro.repository.ProductosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ public class FacturaService {
     private static final String FORMATO_NUMERO = "%s-%04d";
 
     private final FacturasRepository facturaRepository;
+
+    @Autowired
+    private ProductoService productoService;
 
     @Autowired
     public FacturaService(FacturasRepository facturaRepository) {
@@ -89,4 +93,14 @@ public class FacturaService {
         return facturaRepository.findByClienteId(idCliente);
     }
 
+    public float calcularImporteTotal(List<Long> productosCodigos, List<Integer> cantidades) {
+        float importeTotal = 0.0f;
+        for (int i = 0; i < productosCodigos.size(); i++) {
+            Long codigoProducto = productosCodigos.get(i);
+            Integer cantidad = cantidades.get(i);
+            float precioProducto = productoService.obtenerPrecioProducto(codigoProducto);
+            importeTotal += cantidad * precioProducto;
+        }
+        return importeTotal;
+    }
 }
