@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.marcos.autonomopro.model.db.FacturaDb;
+import org.marcos.autonomopro.model.db.LineasDb;
+import org.marcos.autonomopro.model.db.ProductoDb;
 import org.marcos.autonomopro.repository.FacturasRepository;
 import org.marcos.autonomopro.repository.ProductosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,13 @@ public class FacturaService {
     private static final String FORMATO_FECHA = "ddMMyyyy";
     private static final String FORMATO_NUMERO = "%s-%04d";
 
-    private final FacturasRepository facturaRepository;
-
     @Autowired
     private ProductoService productoService;
+
+    @Autowired
+    private LineasService lineasService;
+
+    private final FacturasRepository facturaRepository;
 
     @Autowired
     public FacturaService(FacturasRepository facturaRepository) {
@@ -102,5 +107,34 @@ public class FacturaService {
             importeTotal += cantidad * precioProducto;
         }
         return importeTotal;
+    }
+
+    public void calcularYAsignarImportes(FacturaDb factura, List<Long> productosCodigos, List<Integer> cantidades) {
+        // calcular y asignar el importe total
+        float importeTotal = calcularImporteTotal(productosCodigos, cantidades);
+        factura.setImporteTotal(importeTotal);
+        // calcular el importe total del IVA (21%)
+        float importeTotalIVA = importeTotal * 0.21f;
+        factura.setImporteTotalIVA(importeTotalIVA);
+        // calcular el importe total a pagar (importe total + importe total del IVA)
+        float importeTotalAPagar = importeTotal + importeTotalIVA;
+        factura.setImporteTotalAPagar(importeTotalAPagar);
+    }
+
+    public void crearFacturaConLineas(FacturaDb factura, List<Long> productosCodigos, List<Integer> cantidades) {
+
+        // asignar los productos y sus cantidades a la factura
+        for (int i = 0; i < productosCodigos.size(); i++) {
+            Long productoCodigo = productosCodigos.get(i);
+            Integer cantidad = cantidades.get(i);
+
+            ProductoDb producto = productoService.obtenerProductoPorCodigo(productoCodigo);
+            LineasDb linea = new LineasDb();
+            linea.setFactura(factura);
+            linea.setProducto(producto);
+            linea.setCantidadProducto(cantidad);
+            // guardar la línea de factura en la base de datos
+            lineasService.crearLinea(linea);
+        }
     }
 }

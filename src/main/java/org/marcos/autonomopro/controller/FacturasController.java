@@ -73,32 +73,13 @@ public class FacturasController {
         factura.setCliente(cliente);
         factura.setEstado("Pendiente");
 
-        // calcular y asignar el importe total
-        float importeTotal = facturaService.calcularImporteTotal(productosCodigos, cantidades);
-        factura.setImporteTotal(importeTotal);
-        // calcular el importe total del IVA (21%)
-        float importeTotalIVA = importeTotal * 0.21f;
-        factura.setImporteTotalIVA(importeTotalIVA);
-        // calcular el importe total a pagar (importe total + importe total del IVA)
-        float importeTotalAPagar = importeTotal + importeTotalIVA;
-        factura.setImporteTotalAPagar(importeTotalAPagar);
+        // calcular importes y asignarlos a la factura
+        facturaService.calcularYAsignarImportes(factura, productosCodigos, cantidades);
 
-        // crear la factura y guardarla en la base de datos
         facturaService.crearFactura(factura);
 
-        // asignar los productos y sus cantidades a la factura
-        for (int i = 0; i < productosCodigos.size(); i++) {
-            Long productoCodigo = productosCodigos.get(i);
-            Integer cantidad = cantidades.get(i);
-
-            ProductoDb producto = productoService.obtenerProductoPorCodigo(productoCodigo);
-            LineasDb linea = new LineasDb();
-            linea.setFactura(factura);
-            linea.setProducto(producto);
-            linea.setCantidadProducto(cantidad);
-            // guardar la línea de factura en la base de datos
-            lineasService.crearLinea(linea);
-        }
+        // crear la factura y guardarla en la base de datos
+        facturaService.crearFacturaConLineas(factura, productosCodigos, cantidades);
 
         attributes.addFlashAttribute("mensaje", "Factura creada exitosamente");
         return "redirect:/listarFacturas";
@@ -188,6 +169,5 @@ public class FacturasController {
     }
 
     // Modificar factura que no este aun pagada con su albaran
-    // productos
 
 }

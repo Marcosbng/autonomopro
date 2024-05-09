@@ -2,6 +2,7 @@ package org.marcos.autonomopro.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.marcos.autonomopro.exception.ProductoNotFoundException;
 import org.marcos.autonomopro.model.db.ProductoDb;
 import org.marcos.autonomopro.repository.ProductosRepository;
 
@@ -91,5 +93,34 @@ public class ProductoServiceTest {
 
         // Assert
         verify(productosRepository, times(1)).save(producto);
+    }
+
+    @Test
+    void testObtenerPrecioProducto_ProductoExistente() {
+        // Arrange
+        Long codigoProducto = 1L;
+        float precioEsperado = 10.0f;
+        ProductoDb producto = new ProductoDb();
+        producto.setCodigo(codigoProducto);
+        producto.setPrecioUnitario(precioEsperado);
+        when(productosRepository.findByCodigo(codigoProducto)).thenReturn(Optional.of(producto));
+
+        // Act
+        float precioObtenido = productoService.obtenerPrecioProducto(codigoProducto);
+
+        // Assert
+        assertEquals(precioEsperado, precioObtenido);
+    }
+
+    @Test
+    void testObtenerPrecioProducto_ProductoNoExistente() {
+        // Arrange
+        Long codigoProducto = 1L;
+        when(productosRepository.findByCodigo(codigoProducto)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ProductoNotFoundException.class, () -> {
+            productoService.obtenerPrecioProducto(codigoProducto);
+        });
     }
 }
