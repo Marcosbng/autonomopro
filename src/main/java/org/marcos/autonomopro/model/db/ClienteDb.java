@@ -2,6 +2,7 @@ package org.marcos.autonomopro.model.db;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "clientes")
 public class ClienteDb {
     @Id
+    @Column(name = "id_cliente")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

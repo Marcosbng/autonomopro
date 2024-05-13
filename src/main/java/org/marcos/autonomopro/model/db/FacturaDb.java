@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class FacturaDb {
     
     @Id
-    @Column(name = "numero_factura", nullable = false)
+    @Column(name = "num_factura", nullable = false)
     private String numeroFactura;
 
     @Column(name = "estado")
@@ -40,23 +40,23 @@ public class FacturaDb {
     @Column(name = "fecha_vencimiento")
     private Date fechaVencimiento;
 
-    @Column(name = "forma_de_pago")
+    @Column(name = "forma_pago")
     private String formaDePago;
 
-    @Column(name = "importe_total")
+    @Column(name = "imp_total")
     private float importeTotal;
 
-    @Column(name = "importe_total_iva")
+    @Column(name = "imp_total_iva")
     private float importeTotalIVA;
 
-    @Column(name = "importe_total_a_pagar")
+    @Column(name = "imp_total_pagar")
     private float importeTotalAPagar;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "id_cliente")
     private ClienteDb cliente;
 
-    @Column(name = "albaran_numero")
+    @Column(name = "num_albaran")
     private String albaranNumero;
 
     @OneToMany(mappedBy = "factura")

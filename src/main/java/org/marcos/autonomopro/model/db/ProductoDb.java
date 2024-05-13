@@ -22,13 +22,13 @@ import lombok.NoArgsConstructor;
 public class ProductoDb {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo")
+    @Column(name = "cod_prod")
     private Long codigo;
 
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "precio_unitario")
+    @Column(name = "precio_uni")
     private float precioUnitario;
 
     @Column(name = "iva")

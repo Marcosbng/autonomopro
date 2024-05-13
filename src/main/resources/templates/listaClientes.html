@@ -52,14 +52,13 @@
                                         <td th:text="${cliente.nifCif}"></td>
                                         <td th:text="${cliente.email}"></td>
                                         <td>
-                                            <a th:href="@{'/eliminar/cliente/' + ${cliente.id}}"
-                                                class="btn btn-danger">Eliminar</a>
-                                            <!-- Botón Eliminar -->
                                             <a th:href="@{'/perfil/cliente/' + ${cliente.id}}"
                                                 class="btn btn-primary">Perfil Cliente</a>
                                             <a th:href="@{'/facturas/cliente/' + ${cliente.id}}"
                                                 class="btn btn-info">Facturas</a>
-
+                                            <a th:href="@{'/eliminar/cliente/' + ${cliente.id}}"
+                                                class="btn btn-danger">Eliminar</a>
+                                            <!-- Botón Eliminar -->
                                         </td>
                                     </tr>
                                 </tbody>

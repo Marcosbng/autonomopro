@@ -25,12 +25,13 @@ import lombok.NoArgsConstructor;
 public class AlbaranDb {
 
     @Id
-    @Column(name = "numero_albaran")
+    @Column(name = "num_albaran")
     private String numeroAlbaran;
 
+    @Column(name = "fecha_alb")
     private Date fecha;
 
-    @Column(name = "numero_factura")
+    @Column(name = "num_factura")
     private String numeroFactura;
 
     @ManyToOne

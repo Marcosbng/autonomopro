@@ -57,12 +57,12 @@
                                         <td th:text="${producto.precioUnitario}"></td>
                                         <td th:text="${producto.iva}"></td>
                                         <td>
-                                            <a th:href="@{'/eliminar/producto/' + ${producto.codigo}}"
-                                                class="btn btn-danger">Eliminar</a>
-                                            <!-- Botón Eliminar -->
                                             <a th:href="@{'/editar/producto/' + ${producto.codigo}}"
                                                 class="btn btn-primary">Editar Producto</a>
                                             <!-- Botón Editar -->
+                                            <a th:href="@{'/eliminar/producto/' + ${producto.codigo}}"
+                                                class="btn btn-danger">Eliminar</a>
+                                            <!-- Botón Eliminar -->
                                         </td>
                                     </tr>
                                 </tbody>

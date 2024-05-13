@@ -168,6 +168,5 @@ public class FacturasController {
         return "listaFacturasCliente"; // vista para mostrar las facturas del cliente
     }
 
-    // Modificar factura que no este aun pagada con su albaran
 
 }

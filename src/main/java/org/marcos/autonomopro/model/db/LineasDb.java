@@ -25,17 +25,17 @@ public class LineasDb {
     private Long idLinea;
 
     @ManyToOne
-    @JoinColumn(name = "numero_factura")
+    @JoinColumn(name = "num_factura")
     private FacturaDb factura;
 
     @ManyToOne
-    @JoinColumn(name = "codigo_producto")
+    @JoinColumn(name = "cod_prod")
     private ProductoDb producto;
 
-    @Column(name = "cantidad_producto")
+    @Column(name = "cantidad_prod")
     private int cantidadProducto;
 
-    @Column(name = "descuento_aplicado")
+    @Column(name = "desc_aplicado")
     private Long descuentoAplicado;
     
 }

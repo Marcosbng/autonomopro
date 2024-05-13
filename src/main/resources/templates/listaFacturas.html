@@ -63,12 +63,12 @@
                                         <td th:text="${factura.fechaEmision}"></td>
                                         <td th:text="${factura.fechaVencimiento}"></td>
                                         <td>
-                                            <a th:href="@{'/eliminar/factura/' + ${factura.numeroFactura}}"
-                                                class="btn btn-danger">Eliminar</a>
-                                            <!-- Botón Eliminar -->
                                             <a th:href="@{'/visualizar/factura/' + ${factura.numeroFactura}}"
                                                 class="btn btn-primary">Visualizar</a>
                                             <!-- Botón Visualizar -->
+                                            <a th:href="@{'/eliminar/factura/' + ${factura.numeroFactura}}"
+                                                class="btn btn-danger">Eliminar</a>
+                                            <!-- Botón Eliminar -->
                                         </td>
                                     </tr>
                                 </tbody>
