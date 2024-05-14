@@ -19,4 +19,6 @@ public interface FacturasRepository extends JpaRepository<FacturaDb, String>{
     List<FacturaDb> findByClienteId(Long clienteId);
 
     Optional<FacturaDb> findTopByOrderByNumeroFacturaDesc();
+
+    List<FacturaDb> findByNumeroFacturaContaining(String searchTerm);
 }

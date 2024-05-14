@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.marcos.autonomopro.model.db.ClienteDb;
+import org.marcos.autonomopro.model.db.FacturaDb;
 import org.marcos.autonomopro.repository.ClientesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +24,12 @@ public class ClienteService {
     public List<ClienteDb> getListaClientes() {
         return clientesRepository.findAll();
     }
+
+    public List<ClienteDb> getListaClientes(String orderBy) {
+        Sort sort = Sort.by(orderBy).ascending(); // ascendente por defecto
+        return clientesRepository.findAll(sort);
+    }
+    
 
     // método mostrar formulario de creación de cliente
     public ClienteDb mostrarFormularioCreacion() {

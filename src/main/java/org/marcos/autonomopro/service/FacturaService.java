@@ -1,6 +1,5 @@
 package org.marcos.autonomopro.service;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -13,11 +12,12 @@ import org.marcos.autonomopro.model.db.ProductoDb;
 import org.marcos.autonomopro.repository.FacturasRepository;
 import org.marcos.autonomopro.repository.ProductosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FacturaService {
-    
+
     private static final String FORMATO_FECHA = "ddMMyyyy";
     private static final String FORMATO_NUMERO = "%s-%04d";
 
@@ -34,9 +34,13 @@ public class FacturaService {
         this.facturaRepository = facturaRepository;
     }
 
-    // método obtener la lista de facturas
-    public List<FacturaDb> getListaFacturas() {
-        return facturaRepository.findAll();
+    public List<FacturaDb> getListaFacturas(String orderBy) {
+        Sort sort = Sort.by(orderBy).ascending(); // ascendente por defecto
+        return facturaRepository.findAll(sort);
+    }
+
+    public List<FacturaDb> buscarFacturas(String buscarPor) {
+        return facturaRepository.findByNumeroFacturaContaining(buscarPor);
     }
 
     public void crearFactura(FacturaDb factura) {
@@ -51,9 +55,11 @@ public class FacturaService {
 
     // método para obtener una factura por su número
     public FacturaDb obtenerFacturaPorNumero(String numeroFactura) {
-        // utiliza el método findByNumeroFactura del repositorio para buscar la factura por su número
+        // utiliza el método findByNumeroFactura del repositorio para buscar la factura
+        // por su número
         Optional<FacturaDb> optionalFactura = facturaRepository.findByNumeroFactura(numeroFactura);
-        // verifica si se encontró la factura y devuelve el resultado, o null si no se encontró
+        // verifica si se encontró la factura y devuelve el resultado, o null si no se
+        // encontró
         return optionalFactura.orElse(null);
     }
 
@@ -66,7 +72,8 @@ public class FacturaService {
     }
 
     public List<FacturaDb> obtenerFacturasVencidas(Date fechaActual) {
-        // utiliza el repositorio de facturas para obtener las facturas con fecha de vencimiento anterior a la fecha actual
+        // utiliza el repositorio de facturas para obtener las facturas con fecha de
+        // vencimiento anterior a la fecha actual
         return facturaRepository.findByFechaVencimientoBeforeAndEstado(fechaActual, "Pendiente");
     }
 
@@ -74,10 +81,10 @@ public class FacturaService {
         // obtiene la fecha actual
         SimpleDateFormat sdf = new SimpleDateFormat(FORMATO_FECHA);
         String fechaActual = sdf.format(new Date());
-    
+
         // busca la última factura creada en la base de datos
         Optional<FacturaDb> ultimaFactura = facturaRepository.findTopByOrderByNumeroFacturaDesc();
-    
+
         int numeroSecuencial;
         if (ultimaFactura.isPresent()) {
             // obtiene el número secuencial de la última factura y lo incrementa en 1
@@ -87,10 +94,10 @@ public class FacturaService {
             // si no hay facturas en la base de datos, comienza desde 1
             numeroSecuencial = 1;
         }
-    
+
         // formatea el número secuencial con ceros a la izquierda
         String numeroFormateado = String.format(FORMATO_NUMERO, fechaActual, numeroSecuencial);
-    
+
         return numeroFormateado;
     }
 

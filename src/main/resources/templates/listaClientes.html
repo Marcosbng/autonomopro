@@ -39,12 +39,13 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>NIF/CIF</th>
-                                        <th>Email</th>
+                                        <th><a th:href="@{/listarClientes(orderBy='nombre')}">Nombre</a></th>
+                                        <th><a th:href="@{/listarClientes(orderBy='nifCif')}">NIF/CIF</a></th>
+                                        <th><a th:href="@{/listarClientes(orderBy='email')}">Email</a></th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+                                
                                 <tbody>
                                     <!-- Iterar sobre la lista de clientes y mostrar los detalles -->
                                     <tr th:each="cliente : ${clientes}">

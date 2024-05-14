@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="nifCif">NIF/CIF</label>
-                                    <input type="text" class="form-control" id="nifCif" name="nifCif" th:value="${cliente.nifCif}" required>
+                                    <input type="text" class="form-control" id="nifCif" name="nifCif" th:value="${cliente.nifCif}" required pattern="[0-9]{8}[a-zA-Z]" title="El NIF/CIF debe tener 8 números seguidos de una letra">
                                 </div>
                                 <div class="form-group">
                                     <label for="domicilio">Domicilio</label>
@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="telefono">Teléfono</label>
-                                    <input type="text" class="form-control" id="telefono" name="telefono" th:value="${cliente.telefono}" required>
+                                    <input type="text" class="form-control" id="telefono" name="telefono" th:value="${cliente.telefono}" required pattern="[0-9]{9}" title="El teléfono debe tener exactamente 9 números">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>

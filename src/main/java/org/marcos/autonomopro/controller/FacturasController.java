@@ -44,10 +44,16 @@ public class FacturasController {
     private LineasService lineasService;
 
     @GetMapping("/listarFacturas")
-    public String listarFacturas(Model model) {
-        List<FacturaDb> listaFacturas = facturaService.getListaFacturas();
+    public String listarFacturas(Model model, @RequestParam(defaultValue = "numeroFactura") String orderBy,
+            @RequestParam(required = false) String buscarPor) {
+        List<FacturaDb> listaFacturas;
+        if (buscarPor != null && !buscarPor.isEmpty()) {
+            listaFacturas = facturaService.buscarFacturas(buscarPor);
+        } else {
+            listaFacturas = facturaService.getListaFacturas(orderBy);
+        }
         model.addAttribute("facturas", listaFacturas);
-        return "listaFacturas"; // nombre de la vista que mostrará la lista de facturas
+        return "listaFacturas";
     }
 
     @GetMapping("/crearFactura")
@@ -167,6 +173,5 @@ public class FacturasController {
         model.addAttribute("facturas", facturas);
         return "listaFacturasCliente"; // vista para mostrar las facturas del cliente
     }
-
 
 }

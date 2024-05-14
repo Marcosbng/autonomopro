@@ -35,6 +35,17 @@
                 <a href="/crearFactura" class="btn btn-primary">Crear Factura</a>
             </div>
         </div>
+        <div class="row mb-3 col-sm-12 pl-3">
+            <!-- Formulario de búsqueda -->
+            <form action="/listarFacturas" method="get">
+                <div class="form-group">
+                    <label for="buscarPor">Buscar Facturas:</label>
+                    <input type="text" class="form-control" id="buscarPor" name="buscarPor"
+                        placeholder="Ingrese el número de factura">
+                </div>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
@@ -47,16 +58,17 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Número de Factura</th>
-                                        <th>Estado</th>
-                                        <th>Fecha de Emisión</th>
-                                        <th>Fecha de Vencimiento</th>
-                                        <!-- Agrega más encabezados según sea necesario -->
+                                        <th><a th:href="@{/listarFacturas(orderBy='numeroFactura')}">Número de
+                                                Factura</a></th>
+                                        <th><a th:href="@{/listarFacturas(orderBy='estado')}">Estado</a></th>
+                                        <th><a th:href="@{/listarFacturas(orderBy='fechaEmision')}">Fecha de Emisión</a>
+                                        </th>
+                                        <th><a th:href="@{/listarFacturas(orderBy='fechaVencimiento')}">Fecha de
+                                                Vencimiento</a></th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Iterar sobre la lista de facturas y mostrar los detalles -->
                                     <tr th:each="factura : ${facturas}">
                                         <td th:text="${factura.numeroFactura}"></td>
                                         <td th:text="${factura.estado}"></td>

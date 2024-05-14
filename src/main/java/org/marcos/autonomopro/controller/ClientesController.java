@@ -24,10 +24,10 @@ public class ClientesController {
     private ClienteService clientesService;
 
     @GetMapping("/listarClientes")
-    public String listarClientes(Model model) {
-        List<ClienteDb> listaClientes = clientesService.getListaClientes();
+    public String listarClientes(Model model, @RequestParam(defaultValue = "nombre") String orderBy) {
+        List<ClienteDb> listaClientes = clientesService.getListaClientes(orderBy);
         model.addAttribute("clientes", listaClientes);
-        return "listaClientes"; // vista que mostrará la lista de clientes
+        return "listaClientes"; // nombre de la vista que mostrará la lista de clientes
     }
 
     @GetMapping("/crear")
