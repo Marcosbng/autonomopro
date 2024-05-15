@@ -7,10 +7,12 @@ import org.marcos.autonomopro.model.db.FacturaDb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@EnableScheduling
 public class TareaAnularFacturasVencidas {
 
     private static final Logger logger = LoggerFactory.getLogger(TareaAnularFacturasVencidas.class);
@@ -19,7 +21,7 @@ public class TareaAnularFacturasVencidas {
     private FacturaService facturaService;
 
     // Método que se ejecutará automáticamente cada día a la medianoche
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void anularFacturasVencidas() {
         logger.info("Ejecutando tarea de anulación de facturas vencidas...");
         

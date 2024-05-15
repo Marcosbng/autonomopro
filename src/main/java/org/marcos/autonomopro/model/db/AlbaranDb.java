@@ -31,12 +31,16 @@ public class AlbaranDb {
     @Column(name = "fecha_alb")
     private Date fecha;
 
-    @Column(name = "num_factura")
-    private String numeroFactura;
+    //@Column(name = "num_factura")
+    //private String numeroFactura;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private ClienteDb cliente;
+
+    @OneToOne
+    @JoinColumn(name = "num_factura")
+    private FacturaDb factura;
 
     /*@OneToMany(mappedBy = "albaran")
     private List<FacturaDb> facturas;*/

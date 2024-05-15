@@ -153,7 +153,7 @@ public class FacturasController {
             albaran.setNumeroAlbaran(albaranService.generarNumeroAlbaran()); // generamos número albarán
             albaran.setFecha(new Date(System.currentTimeMillis())); // fecha actual
             albaran.setCliente(factura.getCliente()); // cliente de la factura
-            albaran.setNumeroFactura(factura.getNumeroFactura());
+            albaran.setFactura(factura);
 
             // guardar el albarán en la base de datos
             albaranService.crearAlbaran(albaran);

@@ -46,7 +46,7 @@
                                     <tr th:each="albaran : ${albaranes}">
                                         <td th:text="${albaran.numeroAlbaran}"></td>
                                         <td th:text="${albaran.fecha}"></td>
-                                        <td th:text="${albaran.numeroFactura}"></td>
+                                        <td th:text="${albaran.factura.numeroFactura}"></td>
                                         <td th:text="${albaran.cliente.nombre}"></td>
                                         <td>
                                             <!-- Botón para descargar el PDF del albarán -->

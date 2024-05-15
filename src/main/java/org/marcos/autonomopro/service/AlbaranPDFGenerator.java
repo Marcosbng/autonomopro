@@ -28,7 +28,7 @@ public class AlbaranPDFGenerator {
         return baos;
     }
 
-    private void agregarContenidoAlbaran(Document document, AlbaranDb albaran) throws DocumentException {
+    private void agregarContenidoAlbaran(Document document, AlbaranDb albaran) throws DocumentException { //pillar del numero factura que te el albaran la factura, per a traure els productes i importes
         // Título del albarán
         Font fontTitulo = new Font(Font.HELVETICA, 18, Font.BOLD);
         Paragraph titulo = new Paragraph("Albarán - Número: " + albaran.getNumeroAlbaran(), fontTitulo);
@@ -43,8 +43,12 @@ public class AlbaranPDFGenerator {
 
         // Detalles específicos del albarán
         detalles.add(new Paragraph("- Fecha: " + albaran.getFecha()));
-        detalles.add(new Paragraph("- Número de factura: " + albaran.getNumeroFactura()));
+        detalles.add(new Paragraph("- Número de factura: " + albaran.getFactura().getNumeroFactura()));
         detalles.add(new Paragraph("- Nombre del cliente: " + albaran.getCliente().getNombre()));
+        detalles.add(new Paragraph("- Importe total: " + albaran.getFactura().getImporteTotal()));
+        detalles.add(new Paragraph("- Importe total iva: " + albaran.getFactura().getImporteTotalIVA()));
+        detalles.add(new Paragraph("- Importe total a pagar: " + albaran.getFactura().getImporteTotalAPagar()));
+        //for each pa get lineas productos
 
         // Agregar política de privacidad
         Font fontPolitica = new Font(Font.HELVETICA, 10, Font.NORMAL);
