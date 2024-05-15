@@ -57,11 +57,16 @@ public class ClientesController {
 
     @PostMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable("id") Long id, RedirectAttributes attributes) {
-        ClienteDb cliente = clientesService.mostrarFormularioEliminacion(id);
-        if (cliente == null) {
-            attributes.addFlashAttribute("mensajeError", "El cliente no se encontró en la base de datos");
-            return "redirect:/listarClientes"; // redirige a la lista de clientes
+        ClienteDb cliente = clientesService.obtenerClientePorId(id);
+
+        // Comprobar si el cliente está siendo utilizado en alguna factura
+        if (!cliente.getFacturas().isEmpty()) {
+            attributes.addFlashAttribute("mensajeError",
+                    "No se puede eliminar el cliente porque está siendo utilizado en alguna factura");
+            return "redirect:/listarClientes";
         }
+
+        // eliminación
         clientesService.eliminarCliente(id);
         attributes.addFlashAttribute("mensaje", "Cliente eliminado exitosamente");
         return "redirect:/listarClientes"; // redirige a la lista de clientes después de la eliminación
