@@ -17,6 +17,9 @@ public class ProductoService {
     @Autowired
     private ProductosRepository productosRepository;
 
+    @Autowired
+    private LineasService lineasService;
+
     // método obtener lista productos
     public List<ProductoDb> getListaProductos() {
         return productosRepository.findAll();
@@ -34,11 +37,16 @@ public class ProductoService {
         return productoOptional.orElse(null);
     }
 
-    // método eliminar un producto por código
-    public void eliminarProductoPorCodigo(Long codigo) {
-        productosRepository.deleteById(codigo);
+    public boolean eliminarProductoPorCodigo(Long codigo) {
+        boolean enUso = lineasService.existeProductoEnFactura(codigo);
+        if (!enUso) {
+            productosRepository.deleteById(codigo);
+            return true;
+        } else {
+            return false;
+        }
     }
-
+    
     // método actualizar producto
     public void actualizarProducto(ProductoDb producto) {
         productosRepository.save(producto);

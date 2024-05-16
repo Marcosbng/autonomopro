@@ -1,10 +1,13 @@
 package org.marcos.autonomopro.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +33,9 @@ public class ProductoServiceTest {
 
     @InjectMocks
     private ProductoService productoService;
+
+    @Mock
+    private LineasService lineasService;
 
     @Test
     void testCrearProducto() {
@@ -65,17 +71,34 @@ public class ProductoServiceTest {
     }
 
     @Test
-    void eliminarProductoPorCodigo_ProductoExistente_DeberiaEliminarlo() {
-        // Arrange
-        Long codigoProducto = 123L;
-        doNothing().when(productosRepository).deleteById(codigoProducto);
+void eliminarProductoPorCodigo_ProductoExistenteSinFacturaAsociada_DeberiaEliminarlo() {
+    // Arrange
+    Long codigoProducto = 123L;
+    when(lineasService.existeProductoEnFactura(codigoProducto)).thenReturn(false);
+    doNothing().when(productosRepository).deleteById(codigoProducto);
 
-        // Act
-        productoService.eliminarProductoPorCodigo(codigoProducto);
+    // Act
+    boolean eliminado = productoService.eliminarProductoPorCodigo(codigoProducto);
 
-        // Assert
-        verify(productosRepository, times(1)).deleteById(codigoProducto);
-    }
+    // Assert
+    assertTrue(eliminado);
+    verify(productosRepository, times(1)).deleteById(codigoProducto);
+}
+
+@Test
+void eliminarProductoPorCodigo_ProductoExistenteConFacturaAsociada_DeberiaNoEliminarlo() {
+    // Arrange
+    Long codigoProducto = 123L;
+    when(lineasService.existeProductoEnFactura(codigoProducto)).thenReturn(true);
+
+    // Act
+    boolean eliminado = productoService.eliminarProductoPorCodigo(codigoProducto);
+
+    // Assert
+    assertFalse(eliminado);
+    verify(productosRepository, never()).deleteById(codigoProducto);
+}
+
 
     @Test
     void actualizarProducto_ProductoExistente_DeberiaActualizarlo() {

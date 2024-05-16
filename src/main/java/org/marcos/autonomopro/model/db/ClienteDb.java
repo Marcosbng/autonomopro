@@ -2,6 +2,8 @@ package org.marcos.autonomopro.model.db;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,11 +42,13 @@ public class ClienteDb {
 
     @Email(message = "El email debe ser válido")
     private String email;
-
+ 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<AlbaranDb> albaranes;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<FacturaDb> facturas;
     
 }

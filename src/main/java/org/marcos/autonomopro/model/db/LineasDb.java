@@ -1,5 +1,7 @@
 package org.marcos.autonomopro.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class LineasDb {
 
     @ManyToOne
     @JoinColumn(name = "num_factura")
+    @JsonIgnore
     private FacturaDb factura;
 
     @ManyToOne

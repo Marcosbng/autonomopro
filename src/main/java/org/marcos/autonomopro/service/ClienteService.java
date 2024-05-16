@@ -61,8 +61,8 @@ public class ClienteService {
         return clientesRepository.findById(id).orElse(null);
     }
 
-    public void modificarCliente(ClienteDb cliente) {
-        clientesRepository.save(cliente);
+    public ClienteDb modificarCliente(ClienteDb cliente) {
+        return clientesRepository.save(cliente);
     }
     
 }
