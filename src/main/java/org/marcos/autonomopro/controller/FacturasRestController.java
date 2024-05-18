@@ -42,25 +42,31 @@ public class FacturasRestController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<FacturaDb> crearFactura(@RequestBody FacturaDb factura,
-            @RequestParam("clienteId") Long clienteId,
-            @RequestParam("productos") List<Long> productosCodigos,
-            @RequestParam("cantidades") List<Integer> cantidades) {
-
+    public ResponseEntity<String> crearFactura(@RequestBody FacturaDb factura,
+                                               @RequestParam("clienteId") Long clienteId,
+                                               @RequestParam("productos") List<Long> productosCodigos,
+                                               @RequestParam("cantidades") List<Integer> cantidades) {
         try {
+            // Obtener el cliente por su ID
             ClienteDb cliente = clienteService.obtenerClientePorId(clienteId);
+            if (cliente == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+            }
 
+            // Asignar el cliente y el estado a la factura
+            factura.setNumeroFactura(facturaService.generarNumeroFactura());
             factura.setCliente(cliente);
             factura.setEstado("Pendiente");
 
+            // Calcular importes y asignarlos a la factura
             facturaService.calcularYAsignarImportes(factura, productosCodigos, cantidades);
 
-            factura.setNumeroFactura(facturaService.generarNumeroFactura());
+            // Crear la factura y guardarla en la base de datos
             facturaService.crearFacturaConLineas(factura, productosCodigos, cantidades);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(factura);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Factura creada exitosamente");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear la factura: " + e.getMessage());
         }
     }
 

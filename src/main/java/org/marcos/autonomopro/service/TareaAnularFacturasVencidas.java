@@ -20,24 +20,23 @@ public class TareaAnularFacturasVencidas {
     @Autowired
     private FacturaService facturaService;
 
-    // Método que se ejecutará automáticamente cada día a la medianoche
+    // medianoche se ejecuta
     @Scheduled(cron = "0 0 * * * ?")
     public void anularFacturasVencidas() {
-        logger.info("Ejecutando tarea de anulación de facturas vencidas...");
+        logger.info("Ejecutando tarea de anulacion de facturas vencidas...");
         
-        // Obtener la lista de facturas vencidas
         List<FacturaDb> facturasVencidas = facturaService.obtenerFacturasVencidas(new Date(System.currentTimeMillis()));
         
-        logger.info("Número de facturas vencidas encontradas: {}", facturasVencidas.size());
+        logger.info("Numero de facturas vencidas encontradas: {}", facturasVencidas.size());
 
-        // Iterar sobre las facturas vencidas y anularlas
+        // iterar y anular facturas
         for (FacturaDb factura : facturasVencidas) {
-            logger.info("Anulando factura vencida con número: {}", factura.getNumeroFactura());
+            logger.info("Anulando factura vencida con numero: {}", factura.getNumeroFactura());
             factura.setEstado("Anulada");
             facturaService.modificarFactura(factura);
-            logger.info("Factura anulada con éxito");
+            logger.info("Factura anulada con exito");
         }
 
-        logger.info("Tarea de anulación de facturas vencidas completada.");
+        logger.info("Tarea de anulacion de facturas vencidas completada.");
     }
 }

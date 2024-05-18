@@ -25,7 +25,7 @@ public class ClientesRestController {
         return cliente;
     }
 
-    @GetMapping("/eliminar/{id}")
+    @DeleteMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable Long id) {
         ClienteDb cliente = clienteService.obtenerClientePorId(id);
         if (!cliente.getFacturas().isEmpty()) {
@@ -40,7 +40,7 @@ public class ClientesRestController {
         return clienteService.obtenerClientePorId(id);
     }
 
-    @PostMapping("/modificar/{id}")
+    @PutMapping("/modificar/{id}")
     public ClienteDb modificarCliente(@PathVariable Long id, @RequestBody ClienteDb cliente) {
         cliente.setId(id);
         return clienteService.modificarCliente(cliente);
