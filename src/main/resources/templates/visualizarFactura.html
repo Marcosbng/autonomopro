@@ -64,6 +64,7 @@
                 <div th:if="${factura.estado == 'Pendiente'}" class="pending-box">
                     <a th:href="@{/pagarFactura/{id}(id=${factura.numeroFactura})}" class="pay-button">Pagar Factura</a>
                 </div>
+                <div th:if="${factura.estado == 'Anulada'}" class="canceled-box">Factura anulada</div>
                 <!-- Botón para volver a la página listarFacturas -->
                 <div class="back-to-list-container">
                     <a href="/listarFacturas" class="back-to-list-button">Volver atrás</a>
