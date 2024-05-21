@@ -95,10 +95,10 @@
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">Menu Lateral</span>
             </a>
-        
+
             <!-- Sidebar -->
             <div class="sidebar">
-        
+
                 <!-- SidebarSearch Form -->
                 <div class="form-inline">
                     <div class="input-group" data-widget="sidebar-search">
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
@@ -167,7 +167,7 @@
                             <p class="lead">La solución perfecta para autónomos y pequeñas empresas.</p>
                             <hr class="my-4">
                             <p>Con nuestro sistema, gestionar tu facturación nunca ha sido tan fácil.</p>
-                            <a class="btn btn-primary btn-lg" href="#" role="button">Comenzar Ahora</a>
+                            <a class="btn btn-primary btn-lg" href="/crearFactura" role="button">Comenzar Ahora</a>
                         </div>
                     </div>
                 </div><!-- /.col -->
@@ -176,7 +176,35 @@
     </div>
     <!-- /.content-header -->
 
-    <!-- Segundo cuadro con información adicional -->
+    <!-- Agregar gráficos de cantidad e importe total -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Cantidad de Facturas</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="cantidadFacturasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Importe Total de Facturas</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="importeTotalChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--cuadro con información adicional -->
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -192,7 +220,7 @@
                             <ul>
                                 <li>Facturación fácil y rápida en línea.</li>
                                 <li>Generación automática de informes y estadísticas.</li>
-                                <li>Seguridad de datos garantizada con cifrado SSL.</li>
+                                <li>Seguridad de datos.</li>
                                 <li>Soporte dedicado y atención al cliente.</li>
                             </ul>
                             <a href="#" class="btn btn-primary">Más información</a>
@@ -248,6 +276,82 @@
     <script src="/dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="/dist/js/pages/dashboard2.js"></script>
+
+    <!-- Script para generar los gráficos -->
+    <script>
+        // Obtener los datos del backend para cantidad de facturas
+        fetch('/cantidadFacturasHistorico')
+            .then(response => response.json())
+            .then(data => {
+                const labels = Object.keys(data);
+                const values = Object.values(data);
+    
+                const cantidadFacturasData = {
+                    labels: labels,
+                    datasets: [{
+                        label: "Cantidad de Facturas",
+                        data: values,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                };
+    
+                const cantidadFacturasConfig = {
+                    type: 'line',
+                    data: cantidadFacturasData,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+    
+                var cantidadFacturasChart = new Chart(
+                    document.getElementById('cantidadFacturasChart'),
+                    cantidadFacturasConfig
+                );
+            });
+    
+        // Obtener los datos del backend para importe total de facturas
+        fetch('/importeTotalFacturasHistorico')
+            .then(response => response.json())
+            .then(data => {
+                const labels = Object.keys(data);
+                const values = Object.values(data);
+    
+                const importeTotalData = {
+                    labels: labels,
+                    datasets: [{
+                        label: "Importe Total de Facturas",
+                        data: values,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                };
+    
+                const importeTotalConfig = {
+                    type: 'line',
+                    data: importeTotalData,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+    
+                var importeTotalChart = new Chart(
+                    document.getElementById('importeTotalChart'),
+                    importeTotalConfig
+                );
+            });
+    </script>
+
     </body>
 
     </html>

@@ -1,7 +1,9 @@
 package org.marcos.autonomopro.controller;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.marcos.autonomopro.model.db.AlbaranDb;
 import org.marcos.autonomopro.model.db.ClienteDb;
@@ -14,6 +16,7 @@ import org.marcos.autonomopro.service.FacturaService;
 import org.marcos.autonomopro.service.LineasService;
 import org.marcos.autonomopro.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -172,6 +175,30 @@ public class FacturasController {
         List<FacturaDb> facturas = facturaService.obtenerFacturasCliente(id);
         model.addAttribute("facturas", facturas);
         return "listaFacturasCliente"; // vista para mostrar las facturas del cliente
+    }
+
+    @GetMapping("/cantidadFacturasHistorico")
+    public ResponseEntity<Map<String, Long>> getCantidadFacturasHistorico() {
+        List<Object[]> results = facturaService.getCantidadFacturasHistorico();
+        Map<String, Long> historico = new HashMap<>();
+        for (Object[] result : results) {
+            String fecha = (String) result[0];
+            Long cantidad = ((Number) result[1]).longValue();
+            historico.put(fecha, cantidad);
+        }
+        return ResponseEntity.ok().body(historico);
+    }
+
+    @GetMapping("/importeTotalFacturasHistorico")
+    public ResponseEntity<Map<String, Double>> getImporteTotalFacturasHistorico() {
+        List<Object[]> results = facturaService.getImporteTotalFacturasHistorico();
+        Map<String, Double> historico = new HashMap<>();
+        for (Object[] result : results) {
+            String fecha = (String) result[0];
+            Double importe = ((Number) result[1]).doubleValue();
+            historico.put(fecha, importe);
+        }
+        return ResponseEntity.ok().body(historico);
     }
 
 }

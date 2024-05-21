@@ -1,8 +1,12 @@
 package org.marcos.autonomopro.service;
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -144,4 +148,13 @@ public class FacturaService {
             lineasService.crearLinea(linea);
         }
     }
+
+    public List<Object[]> getCantidadFacturasHistorico() {
+        return facturaRepository.findCantidadFacturasGroupByDia();
+    }
+
+    public List<Object[]> getImporteTotalFacturasHistorico() {
+        return facturaRepository.findImporteTotalFacturasGroupByDia();
+    }
+    
 }
