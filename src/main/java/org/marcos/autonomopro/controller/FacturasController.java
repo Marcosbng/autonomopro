@@ -1,5 +1,7 @@
 package org.marcos.autonomopro.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +12,10 @@ import org.marcos.autonomopro.model.db.ClienteDb;
 import org.marcos.autonomopro.model.db.FacturaDb;
 import org.marcos.autonomopro.model.db.LineasDb;
 import org.marcos.autonomopro.model.db.ProductoDb;
+import org.marcos.autonomopro.service.AlbaranPDFGenerator;
 import org.marcos.autonomopro.service.AlbaranService;
 import org.marcos.autonomopro.service.ClienteService;
+import org.marcos.autonomopro.service.FacturaPDFGenerator;
 import org.marcos.autonomopro.service.FacturaService;
 import org.marcos.autonomopro.service.LineasService;
 import org.marcos.autonomopro.service.ProductoService;
@@ -26,6 +30,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.lowagie.text.DocumentException;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 //@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
@@ -45,6 +53,9 @@ public class FacturasController {
 
     @Autowired
     private LineasService lineasService;
+
+    @Autowired
+    private FacturaPDFGenerator facturaPDFGenerator;
 
     @GetMapping("/listarFacturas")
     public String listarFacturas(Model model, @RequestParam(defaultValue = "numeroFactura") String orderBy,
@@ -199,6 +210,27 @@ public class FacturasController {
             historico.put(fecha, importe);
         }
         return ResponseEntity.ok().body(historico);
+    }
+
+    @GetMapping("/descargarFactura/{numeroFactura}")
+    public void descargarFactura(@PathVariable String numeroFactura, HttpServletResponse response) throws IOException {
+        try {
+            // obtener el objeto FacturaDb correspondiente al número de factura proporcionado
+            FacturaDb factura = facturaService.obtenerFacturaPorNumero(numeroFactura);
+
+            // generar el contenido de la factura en un documento PDF utilizando el objeto FacturaDb
+            ByteArrayOutputStream baos = facturaPDFGenerator.generarPDF(factura);
+
+            // establecer las cabeceras de la respuesta HTTP
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=factura_" + numeroFactura + ".pdf");
+
+            // escribir el contenido del PDF en el flujo de salida de la respuesta
+            response.getOutputStream().write(baos.toByteArray());
+            response.getOutputStream().flush();
+        } catch (DocumentException e) {
+            throw new IOException("Error al generar el documento PDF de la factura", e);
+        }
     }
 
 }

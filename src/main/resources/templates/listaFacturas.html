@@ -81,6 +81,8 @@
                                             <a th:href="@{'/eliminar/factura/' + ${factura.numeroFactura}}"
                                                 class="btn btn-danger">Eliminar</a>
                                             <!-- Botón Eliminar -->
+                                            <a th:href="@{'/descargarFactura/' + ${factura.numeroFactura}}"
+                                                class="btn btn-primary">Descargar PDF</a>
                                         </td>
                                     </tr>
                                 </tbody>
