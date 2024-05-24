@@ -1,12 +1,7 @@
 package org.marcos.autonomopro.service;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.*;
 import org.marcos.autonomopro.model.db.FacturaDb;
 import org.marcos.autonomopro.model.db.LineasDb;
 import org.springframework.stereotype.Component;
@@ -19,9 +14,9 @@ public class FacturaPDFGenerator {
 
     public ByteArrayOutputStream generarPDF(FacturaDb factura) throws DocumentException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Document document = new Document();
+        Document document = new Document(PageSize.A4, 36, 36, 54, 36);
         try {
-            PdfWriter.getInstance(document, baos);
+            PdfWriter writer = PdfWriter.getInstance(document, baos);
             document.open();
             agregarContenidoFactura(document, factura);
         } finally {
@@ -31,6 +26,17 @@ public class FacturaPDFGenerator {
     }
 
     private void agregarContenidoFactura(Document document, FacturaDb factura) throws DocumentException {
+        // Agregar logo
+        try {
+            Image logo = Image.getInstance("src/main/resources/static/dist/img/autonomo-pro.png");
+            logo.scaleToFit(100, 100);
+            logo.setAlignment(Element.ALIGN_LEFT);
+            document.add(logo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Titulo
         Font fontTitulo = new Font(Font.HELVETICA, 18, Font.BOLD);
         Paragraph titulo = new Paragraph("Factura - Número: " + factura.getNumeroFactura(), fontTitulo);
         titulo.setAlignment(Element.ALIGN_CENTER);
@@ -38,40 +44,64 @@ public class FacturaPDFGenerator {
         document.add(titulo);
 
         // Detalles de la factura
-        Font fontDetalles = new Font(Font.HELVETICA, 12, Font.BOLD);
-        Paragraph detalles = new Paragraph("Detalles de la factura:", fontDetalles);
-        detalles.setSpacingAfter(10f);
+        Font fontDetalles = new Font(Font.HELVETICA, 12, Font.NORMAL);
+        Font fontDetallesBold = new Font(Font.HELVETICA, 12, Font.BOLD);
 
-        // Detalles específicos de la factura
-        detalles.add(new Paragraph("- Fecha: " + factura.getFechaEmision()));
-        detalles.add(new Paragraph("- Fecha de vencimiento: " + factura.getFechaVencimiento()));
-        detalles.add(new Paragraph("- Estado: " + factura.getEstado()));
-        detalles.add(new Paragraph("- Nombre del cliente: " + factura.getCliente().getNombre()));
-        detalles.add(new Paragraph("- Importe total: " + factura.getImporteTotal()));
-        detalles.add(new Paragraph("- Importe total IVA: " + factura.getImporteTotalIVA()));
-        detalles.add(new Paragraph("- Importe total a pagar: " + factura.getImporteTotalAPagar()));
+        PdfPTable tablaDetalles = new PdfPTable(2);
+        tablaDetalles.setWidthPercentage(100);
+        tablaDetalles.setSpacingBefore(20f);
+        tablaDetalles.setSpacingAfter(20f);
 
-        // Productos
-        Paragraph productos = new Paragraph("- Productos:", fontDetalles);
+        tablaDetalles.addCell(new Phrase("Fecha de Emisión:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(factura.getFechaEmision().toString(), fontDetalles));
+        tablaDetalles.addCell(new Phrase("Fecha de Vencimiento:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(factura.getFechaVencimiento().toString(), fontDetalles));
+        tablaDetalles.addCell(new Phrase("Estado:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(factura.getEstado(), fontDetalles));
+        tablaDetalles.addCell(new Phrase("Nombre del Cliente:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(factura.getCliente().getNombre(), fontDetalles));
+        tablaDetalles.addCell(new Phrase("Importe Total:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(String.valueOf(factura.getImporteTotal()), fontDetalles));
+        tablaDetalles.addCell(new Phrase("Importe Total IVA:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(String.valueOf(factura.getImporteTotalIVA()), fontDetalles));
+        tablaDetalles.addCell(new Phrase("Importe Total a Pagar:", fontDetallesBold));
+        tablaDetalles.addCell(new Phrase(String.valueOf(factura.getImporteTotalAPagar()), fontDetalles));
+
+        document.add(tablaDetalles);
+
+        // Tabla de productos
+        Paragraph productosTitulo = new Paragraph("Productos:", fontDetallesBold);
+        productosTitulo.setSpacingBefore(10f);
+        productosTitulo.setSpacingAfter(10f);
+        document.add(productosTitulo);
+
+        PdfPTable tablaProductos = new PdfPTable(3);
+        tablaProductos.setWidthPercentage(100);
+        tablaProductos.setSpacingBefore(10f);
+        tablaProductos.setSpacingAfter(10f);
+
+        tablaProductos.addCell(new Phrase("Producto", fontDetallesBold));
+        tablaProductos.addCell(new Phrase("Cantidad", fontDetallesBold));
+        tablaProductos.addCell(new Phrase("Precio Unitario", fontDetallesBold));
+
         List<LineasDb> lineasFactura = factura.getLineasFactura();
         for (LineasDb linea : lineasFactura) {
-            String detalleProducto = String.format("  - %s: %d unidades",
-                    linea.getProducto().getNombre(), linea.getCantidadProducto());
-            productos.add(new Paragraph(detalleProducto));
+            tablaProductos.addCell(new Phrase(linea.getProducto().getNombre(), fontDetalles));
+            tablaProductos.addCell(new Phrase(String.valueOf(linea.getCantidadProducto()), fontDetalles));
+            tablaProductos.addCell(new Phrase(String.valueOf(linea.getProducto().getPrecioUnitario()), fontDetalles));
         }
-        detalles.add(productos);
+
+        document.add(tablaProductos);
 
         // Política de privacidad
-        Font fontPolitica = new Font(Font.HELVETICA, 10, Font.NORMAL);
-        Paragraph politicaPrivacidad = new Paragraph("\nPolítica de Privacidad:", fontDetalles);
+        Paragraph politicaPrivacidad = new Paragraph("\nPolítica de Privacidad:", fontDetallesBold);
         politicaPrivacidad.add(new Paragraph(
-                "La información proporcionada en esta factura es confidencial y se destina únicamente ", fontPolitica));
+                "La información proporcionada en esta factura es confidencial y se destina únicamente ", fontDetalles));
         politicaPrivacidad.add(new Paragraph(
-                "para el uso del destinatario. Cualquier divulgación, reproducción o distribución ", fontPolitica));
+                "para el uso del destinatario. Cualquier divulgación, reproducción o distribución ", fontDetalles));
         politicaPrivacidad.add(new Paragraph(
-                "de esta factura sin autorización está estrictamente prohibida. ", fontPolitica));
+                "de esta factura sin autorización está estrictamente prohibida. ", fontDetalles));
 
-        document.add(detalles);
         document.add(politicaPrivacidad);
-    }  
+    }
 }
