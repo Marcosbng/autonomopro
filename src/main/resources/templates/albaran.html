@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
-    <title>Factura</title>
+    <title>Albarán</title>
     <style>
         .clearfix:after {
             content: "";
@@ -57,7 +57,7 @@
         #project span {
             color: #5D6975;
             text-align: right;
-            width: 52px;
+            width: 70px; /* Ajustar el ancho */
             margin-right: 10px;
             display: inline-block;
             font-size: 0.8em;
@@ -65,6 +65,12 @@
 
         #project div {
             white-space: nowrap;        
+        }
+
+        #important-info {
+            float: right; /* Alineación a la derecha */
+            text-align: right;
+            color: #3f4775; /* Color rojo para resaltar */
         }
 
         table {
@@ -138,11 +144,14 @@
         <div id="logo">
             <img src="/src/main/resources/static/dist/img/autonomo-pro.png" alt="Logo"></img>
         </div>
-        <h1 th:text="'FACTURA ' + ${factura.numeroFactura}">FACTURA</h1>
+        <h1 th:text="'ALBARÁN ' + ${albaran.numeroAlbaran}">ALBARÁN</h1>
         <div id="project">
-            <div><span>CLIENTE</span> <span th:text="${factura.cliente.nombre}">Nombre Cliente</span></div>
-            <div><span>FECHA</span> <span th:text="${factura.fechaEmision}">Fecha</span></div>
-            <div><span>FECHA VENCIMIENTO</span> <span th:text="${factura.fechaVencimiento}">Fecha Vencimiento</span></div>
+            <div><span>CLIENTE</span> <span th:text="${albaran.cliente.nombre}">Nombre Cliente</span></div>
+            <div><span>FECHA</span> <span th:text="${albaran.fecha}">Fecha</span></div>
+        </div>
+        <div id="important-info">
+            <div><span>F.ASOCIADA</span></div>
+            <div th:text="${albaran.factura.numeroFactura}">Factura Asociada</div>
         </div>
     </header>
     <main>
@@ -150,34 +159,36 @@
             <thead>
                 <tr>
                     <th class="service">PRODUCTO</th>
-                    <th>PRECIO</th>
                     <th>CANTIDAD</th>
-                    <th></th>
+                    <th>PRECIO UNITARIO</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="linea : ${factura.lineasFactura}">
+                <tr th:each="linea : ${albaran.factura.lineasFactura}">
                     <td class="service" th:text="${linea.producto.nombre}">Producto</td>
-                    <td class="unit" th:text="${linea.producto.precioUnitario}">Precio</td>
                     <td class="qty" th:text="${linea.cantidadProducto}">Cantidad</td>
-                    <td></td>
+                    <td class="unit" th:text="${linea.producto.precioUnitario}">Precio Unitario</td>
                 </tr>
+            </tbody>
+        </table>
+        <table style="width: 90%;">
+            <tfoot>
                 <tr>
                     <td colspan="4"></td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align: right;">SUBTOTAL</td>
-                    <td class="total" th:text="${factura.importeTotal}">Subtotal</td>
+                    <td class="total" th:text="${albaran.factura.importeTotal}">Subtotal</td>
                 </tr>
                 <tr>
                     <td colspan="3" style="text-align: right;">IVA</td>
-                    <td class="total" th:text="${factura.importeTotalIVA}">Iva</td>
+                    <td class="total" th:text="${albaran.factura.importeTotalIVA}">Iva</td>
                 </tr>
                 <tr>
                     <td colspan="3" class="grand total" style="text-align: right;">TOTAL</td>
-                    <td class="grand total" th:text="${factura.importeTotalAPagar}">Total</td>
+                    <td class="grand total" th:text="${albaran.factura.importeTotalAPagar}">Total</td>
                 </tr>
-            </tbody>
+            </tfoot>
         </table>
         <div id="notices">
             <div>AVISO:</div>
@@ -185,7 +196,7 @@
         </div>        
     </main>     
     <footer>
-        Esta factura fue generada electrónicamente y es válida sin firma ni sello.
+        Este albarán fue generado electrónicamente y es válido sin firma ni sello.
     </footer>
 </body>
 </html>

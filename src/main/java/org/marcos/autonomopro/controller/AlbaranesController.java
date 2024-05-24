@@ -39,19 +39,19 @@ public class AlbaranesController {
     @GetMapping("/descargarAlbaran/{numeroAlbaran}")
     public void descargarAlbaran(@PathVariable String numeroAlbaran, HttpServletResponse response) throws IOException {
         try {
-            // obtener el objeto AlbaranDb correspondiente al número de albarán
+            // Obtener el objeto AlbaranDb correspondiente al número de albarán
             // proporcionado
             AlbaranDb albaran = albaranService.obtenerAlbaranPorNumero(numeroAlbaran);
 
-            // generar el contenido del albarán en un documento PDF utilizando el objeto
+            // Generar el contenido del albarán en un documento PDF utilizando el objeto
             // AlbaranDb
             ByteArrayOutputStream baos = albaranPDFGenerator.generarPDF(albaran);
 
-            // establecer las cabeceras de la respuesta HTTP
+            // Establecer las cabeceras de la respuesta HTTP
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment; filename=albaran_" + numeroAlbaran + ".pdf");
 
-            // escribir el contenido del PDF en el flujo de salida de la respuesta
+            // Escribir el contenido del PDF en el flujo de salida de la respuesta
             response.getOutputStream().write(baos.toByteArray());
             response.getOutputStream().flush();
         } catch (DocumentException e) {
