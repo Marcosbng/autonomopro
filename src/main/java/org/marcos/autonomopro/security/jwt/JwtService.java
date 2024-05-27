@@ -66,8 +66,7 @@ public class JwtService { // Se encargará de generar el token y comprobar su va
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
 }

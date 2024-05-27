@@ -29,7 +29,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin //Al no poner nada más permitimos acceder desde cualquier origen
+@CrossOrigin // Al no poner nada más permitimos acceder desde cualquier origen
 public class AuthController {
 
     @Autowired
@@ -47,10 +47,21 @@ public class AuthController {
     @Autowired
     JwtService jwtProvider;
 
+    @GetMapping("/registro")
+    public String mostrarFormularioRegistro() {
+        return "registro";
+    }
+
+    @GetMapping("/login")
+    public String mostrarFormularioLogin() {
+        return "login"; 
+    }
+
     @PostMapping("/nuevo")
     public ResponseEntity<?> nuevo(@Valid @RequestBody NuevoUsuario nuevoUsuario, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensaje("Datos incorrectos o email inválido"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new Mensaje("Datos incorrectos o email inválido"));
         }
         if (usuarioService.existsByNickname(nuevoUsuario.getNickname())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensaje("El nickname del usuario ya existe"));
@@ -58,8 +69,8 @@ public class AuthController {
         if (usuarioService.existsByEmail(nuevoUsuario.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensaje("El email del usuario ya existe"));
         }
-        UsuarioDb usuarioDb = 
-            new UsuarioDb(nuevoUsuario.getNombre(), nuevoUsuario.getNickname(), nuevoUsuario.getEmail(),
+        UsuarioDb usuarioDb = new UsuarioDb(nuevoUsuario.getNombre(), nuevoUsuario.getNickname(),
+                nuevoUsuario.getEmail(),
                 passwordEncoder.encode(nuevoUsuario.getPassword()));
         Set<RolDb> rolesDb = new HashSet<>();
         rolesDb.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
@@ -70,17 +81,16 @@ public class AuthController {
         usuarioService.save(usuarioDb);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Mensaje("Usuario creado"));
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensaje("Datos incorrectos"));
-        Authentication authentication =
-            authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUsuario.getNickname(), loginUsuario.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         JwtDto jwtDto = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities());
         return ResponseEntity.status(HttpStatus.OK).body(jwtDto);
     }
