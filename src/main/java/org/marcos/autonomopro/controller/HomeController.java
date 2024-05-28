@@ -13,8 +13,13 @@ public class HomeController {
         return "fragments/index";
     }
 
-    @GetMapping("/") //l
+    @GetMapping({"/", "/auth/login"}) // Ambas rutas llevarán al login
     public String mostrarLogin() {
         return "login";
+    }
+
+    @GetMapping("/registro") //l
+    public String mostrarRegistro() {
+        return "registro";
     }
 } 
