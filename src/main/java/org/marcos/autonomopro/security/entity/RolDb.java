@@ -2,9 +2,7 @@ package org.marcos.autonomopro.security.entity;
 
 
 
-
 import org.marcos.autonomopro.security.enums.RolNombre;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+
 public class UsuarioPrincipal implements UserDetails{ //Clase encargada de generar la seguridad: Implementa los privilegios de cada usuario
     private String nombreCompleto;
     private String nickname;

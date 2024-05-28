@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +38,7 @@ public class UsuarioDb {
     private String email;
     @NotNull
     private String password;
+
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
     // En la tabla 'usuarios_roles' queremos sacar todos los 'idRol' correspondientes

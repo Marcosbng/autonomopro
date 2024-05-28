@@ -55,21 +55,62 @@
             background-color: #0056b3;
         }
     </style>
+    <script th:inline="javascript">
+        var token = localStorage.getItem('token');
+        if (!token) {
+            // Redirigir al usuario a la página de inicio de sesión si no hay token JWT presente
+            window.location.href = '/auth/login';
+        } else {
+            // Agregar el token JWT como encabezado de autorización a cada solicitud AJAX
+            $.ajaxSetup({
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+        }
+    </script>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const nickname = document.getElementById('nickname').value;
+            const password = document.getElementById('password').value;
+            
+            fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'nickname': nickname,
+                    'password': password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    // Almacenar el token en localStorage
+                    localStorage.setItem('token', data.token);
+                    
+                    // Redirigir a una página protegida
+                    window.location.href = '/index';
+                } else {
+                    alert('Login failed');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Login</h1>
-        <form th:action="@{/auth/login}" method="post">
-            <div>
-                <label for="nickname">Nickname:</label>
-                <input type="text" id="nickname" name="nickname">
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
-            </div>
-            <button type="submit">Login</button>
-        </form>
-    </div>
+    <form onsubmit="handleLogin(event)">
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nickname" name="nickname" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
 </body>
 </html>

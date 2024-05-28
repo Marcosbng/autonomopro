@@ -2,8 +2,6 @@ package org.marcos.autonomopro.security;
 
 import java.util.List;
 
-import org.marcos.autonomopro.security.jwt.JwtAuthenticationFilter;
-import org.marcos.autonomopro.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-
+import org.marcos.autonomopro.security.jwt.JwtAuthenticationFilter;
+import org.marcos.autonomopro.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -32,55 +30,61 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    
+
     @Autowired
-    UserDetailsServiceImpl userDetailsService; //Convierte la clase UsuarioDb en UsuarioPrincipal (UserDetails)
+    UserDetailsServiceImpl userDetailsService; // Convierte la clase UsuarioDb en UsuarioPrincipal (UserDetails)
 
     @Bean
-    public PasswordEncoder passwordEncoder() { //permite cifrar la contraseña
+    public PasswordEncoder passwordEncoder() { // permite cifrar la contraseña
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    private static final String[] WHITE_LIST_URL = {"/auth/**",
+    private static final String[] WHITE_LIST_URL = {
             "/api-docs/**",
             "/swagger-ui/**",
             "/webjars/**",
-            "/login"
+            "/auth/login",
+            "/auth/nuevo",
+            "/**"
         };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //Permitir no estar autenticado en "/auth" y el resto obligar a autenticar
-        //Comprobar el token en cada petición (jwtTokenFilter)
+        // Permitir no estar autenticado en "/auth" y el resto obligar a autenticar
+        // Comprobar el token en cada petición (jwtTokenFilter)
         http
+                .cors(customizer -> customizer.configurationSource(CorsConfigurationSource()))
                 .csrf(csrf -> csrf
                         .disable())
-                        .authorizeHttpRequests(authRequest-> authRequest
+                .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers(WHITE_LIST_URL).permitAll()
                         .anyRequest().authenticated())
-                        .sessionManagement(sessionManager->sessionManager
+                .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    //CORS (Cross-origin resource sharing) : Mecanismo que permite que recursos con acceso
-    // restringido puedan ser utilizados desde fuera de la API, por ejemplo desde Angular
+    // CORS (Cross-origin resource sharing) : Mecanismo que permite que recursos con
+    // acceso
+    // restringido puedan ser utilizados desde fuera de la API, por ejemplo desde
+    // Angular
     @Bean
-    CorsConfigurationSource CorsConfigurationSource(){
+    CorsConfigurationSource CorsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //Configurar desde donde se puede invocar a la API
-        configuration.setAllowedOrigins(List.of("http://localhost:8005","http://localhost:8080"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE","PUT")); // Que métodos pueden utilizarse
+        // Configurar desde donde se puede invocar a la API
+        configuration.setAllowedOrigins(List.of("http://localhost:8005", "http://localhost:8080"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT")); // Que métodos pueden utilizarse
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
+
 }
