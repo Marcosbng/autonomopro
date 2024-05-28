@@ -50,7 +50,8 @@ public class SecurityConfig {
             "/webjars/**",
             "/auth/login",
             "/auth/nuevo",
-            "/**"
+            "/registro",
+            "/"
         };
 
     @Bean

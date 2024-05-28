@@ -352,9 +352,14 @@
             });
     </script>
     <script>
+        function deleteCookie(name) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+
         function logout() {
-            // Eliminar el token JWT del localStorage
-            localStorage.removeItem('token');
+            // Eliminar el token JWT de las cookies
+            deleteCookie('BearerToken');
+            
             // Redirigir al usuario a la página de login
             window.location.href = '/auth/login';
         }

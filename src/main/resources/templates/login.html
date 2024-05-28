@@ -56,6 +56,13 @@
         }
     </style>
     <script>
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
         function handleLogin(event) {
             event.preventDefault();
             
@@ -75,8 +82,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.token) {
-                    // Almacenar el token en localStorage
-                    localStorage.setItem('token', data.token);
+                    // Almacenar el token en cookies
+                    setCookie('BearerToken', data.token, 1);
                     
                     // Redirigir a una página protegida
                     window.location.href = '/index';
