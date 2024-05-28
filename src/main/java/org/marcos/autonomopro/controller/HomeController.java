@@ -10,4 +10,9 @@ public class HomeController {
     public String index() {
         return "fragments/index";
     }
+
+    @GetMapping("/login")
+    public String mostrarLogin() {
+        return "login";
+    }
 } 
