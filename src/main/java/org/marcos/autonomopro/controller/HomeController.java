@@ -11,7 +11,7 @@ public class HomeController {
         return "fragments/index";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/login") //l
     public String mostrarLogin() {
         return "login";
     }
