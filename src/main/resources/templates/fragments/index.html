@@ -51,7 +51,7 @@
                     <a href="/listarProductos" class="nav-link">Productos</a>
                 </li>
             </ul>
-
+            <a href="#" onclick="logout()">Cerrar sesión</a>
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
@@ -351,7 +351,14 @@
                 );
             });
     </script>
-
+    <script>
+        function logout() {
+            // Eliminar el token JWT del localStorage
+            localStorage.removeItem('token');
+            // Redirigir al usuario a la página de login
+            window.location.href = '/auth/login';
+        }
+    </script>
     </body>
 
     </html>

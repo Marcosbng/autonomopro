@@ -55,20 +55,6 @@
             background-color: #0056b3;
         }
     </style>
-    <script th:inline="javascript">
-        var token = localStorage.getItem('token');
-        if (!token) {
-            // Redirigir al usuario a la página de inicio de sesión si no hay token JWT presente
-            window.location.href = '/auth/login';
-        } else {
-            // Agregar el token JWT como encabezado de autorización a cada solicitud AJAX
-            $.ajaxSetup({
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            });
-        }
-    </script>
     <script>
         function handleLogin(event) {
             event.preventDefault();
@@ -79,12 +65,12 @@
             fetch('/auth/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json' // Cambiar a JSON
                 },
-                body: new URLSearchParams({
-                    'nickname': nickname,
-                    'password': password
-                })
+                body: JSON.stringify({
+                    nickname: nickname,
+                    password: password
+                }) // Convertir los datos a JSON
             })
             .then(response => response.json())
             .then(data => {
@@ -101,6 +87,7 @@
             .catch(error => console.error('Error:', error));
         }
     </script>
+    
 </head>
 <body>
     <div class="login-container">
