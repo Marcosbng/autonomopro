@@ -8,12 +8,13 @@ import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
 
+import org.marcos.autonomopro.security.entity.UsuarioPrincipal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import org.marcos.autonomopro.security.entity.UsuarioPrincipal;
+
 
 @Service
 public class JwtService { // Se encargará de generar el token y comprobar su validez
@@ -30,7 +31,7 @@ public class JwtService { // Se encargará de generar el token y comprobar su va
         return Jwts.builder().setSubject(usuarioPrincipal.getUsername())
             .setIssuedAt(new Date())
             .setExpiration(new Date(new Date().getTime() + expiration * 1000))
-            .signWith(getSignInKey(),SignatureAlgorithm.HS512)
+            .signWith(getSignInKey(),SignatureAlgorithm.HS256)
             .compact();
     }
 
@@ -66,7 +67,8 @@ public class JwtService { // Se encargará de generar el token y comprobar su va
     }
 
     private Key getSignInKey() {
-        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 }
