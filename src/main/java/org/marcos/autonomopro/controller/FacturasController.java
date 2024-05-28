@@ -216,17 +216,12 @@ public class FacturasController {
     @GetMapping("/descargarFactura/{numeroFactura}")
     public void descargarFactura(@PathVariable String numeroFactura, HttpServletResponse response) throws IOException {
         try {
-            // obtener el objeto FacturaDb correspondiente al número de factura proporcionado
             FacturaDb factura = facturaService.obtenerFacturaPorNumero(numeroFactura);
-
-            // generar el contenido de la factura en un documento PDF utilizando el objeto FacturaDb
             ByteArrayOutputStream baos = facturaPDFGenerator.generarPDF(factura);
 
-            // establecer las cabeceras de la respuesta HTTP
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "attachment; filename=factura_" + numeroFactura + ".pdf");
 
-            // escribir el contenido del PDF en el flujo de salida de la respuesta
             response.getOutputStream().write(baos.toByteArray());
             response.getOutputStream().flush();
         } catch (DocumentException e) {
