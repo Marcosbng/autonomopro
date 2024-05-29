@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>org.marcos</groupId>
 	<artifactId>autonomopro</artifactId>
-	<packaging>war</packaging>
 	<version>1.0.0</version>
 	<name>autonomopro</name>
 	<description>TFG DAW Marcos</description>
