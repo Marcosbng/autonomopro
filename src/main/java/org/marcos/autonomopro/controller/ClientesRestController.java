@@ -3,6 +3,7 @@ package org.marcos.autonomopro.controller;
 import org.marcos.autonomopro.model.db.ClienteDb;
 import org.marcos.autonomopro.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ClientesRestController {
         return cliente;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable Long id) {
         ClienteDb cliente = clienteService.obtenerClientePorId(id);

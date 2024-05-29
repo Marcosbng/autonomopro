@@ -3,6 +3,7 @@ package org.marcos.autonomopro.controller;
 import org.marcos.autonomopro.model.db.ProductoDb;
 import org.marcos.autonomopro.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ProductosRestController {
         return "Producto creado exitosamente";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/eliminar/{codigo}")
     public String eliminarProducto(@PathVariable Long codigo) {
         boolean eliminado = productoService.eliminarProductoPorCodigo(codigo);

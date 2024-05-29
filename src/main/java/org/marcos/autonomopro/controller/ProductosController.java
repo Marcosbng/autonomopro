@@ -7,6 +7,9 @@ import org.marcos.autonomopro.service.ClienteService;
 import org.marcos.autonomopro.service.LineasService;
 import org.marcos.autonomopro.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +34,15 @@ public class ProductosController {
     public String listarProductos(Model model) {
         List<ProductoDb> listaProductos = productoService.getListaProductos();
         model.addAttribute("productos", listaProductos);
+
+        // Obtener la autenticación actual y verificar si el usuario tiene el rol de administrador
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                              .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        // Añadir el atributo "isAdmin" al modelo
+        model.addAttribute("isAdmin", isAdmin);
+
         return "listaProductos";
     }
 
@@ -52,6 +64,7 @@ public class ProductosController {
         return "redirect:/listarProductos";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/eliminar/producto/{codigo}")
     public String eliminarProducto(@PathVariable Long codigo, RedirectAttributes attributes) {
         // Verificar si el producto está siendo utilizado en alguna factura

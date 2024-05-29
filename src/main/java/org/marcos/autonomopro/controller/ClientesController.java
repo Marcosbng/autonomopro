@@ -7,6 +7,9 @@ import org.marcos.autonomopro.model.db.FacturaDb;
 import org.marcos.autonomopro.repository.ClientesRepository;
 import org.marcos.autonomopro.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,8 +31,16 @@ public class ClientesController {
     @GetMapping("/listarClientes")
     public String listarClientes(Model model, @RequestParam(defaultValue = "nombre") String orderBy) {
         List<ClienteDb> listaClientes = clientesService.getListaClientes(orderBy);
+
+        // Obtener la autenticación actual y verificar si el usuario tiene el rol de administrador
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                              .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        // Añadir el atributo "isAdmin" al modelo
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("clientes", listaClientes);
-        return "listaClientes"; // nombre de la vista que mostrará la lista de clientes
+        return "listaClientes";
     }
 
     @GetMapping("/crear")
@@ -50,6 +61,7 @@ public class ClientesController {
         return "redirect:/listarClientes"; // redirigir a la lista de clientes después de la creación
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/eliminar/cliente/{id}")
     public String mostrarFormularioEliminacion(@PathVariable("id") Long id, Model model) {
         ClienteDb cliente = clientesService.mostrarFormularioEliminacion(id);
@@ -57,6 +69,7 @@ public class ClientesController {
         return "formEliminarCliente"; // vista para confirmar la eliminación del cliente
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable("id") Long id, RedirectAttributes attributes) {
         ClienteDb cliente = clientesService.obtenerClientePorId(id);

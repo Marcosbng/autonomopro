@@ -10,6 +10,7 @@ import org.marcos.autonomopro.service.LineasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -76,6 +77,7 @@ public class FacturasRestController {
         return facturaService.obtenerFacturaPorNumero(numeroFactura);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/eliminar/{numeroFactura}")
     public String eliminarFactura(@PathVariable String numeroFactura) {
         try {

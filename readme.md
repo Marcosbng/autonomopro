@@ -1,0 +1,1 @@
+docker build --build-arg JAR_FILE=docker_target/autonomopro-1.0.0.jar -t marcos/autonomopro .

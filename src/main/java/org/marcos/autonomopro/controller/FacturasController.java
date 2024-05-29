@@ -21,6 +21,9 @@ import org.marcos.autonomopro.service.LineasService;
 import org.marcos.autonomopro.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,13 +63,21 @@ public class FacturasController {
 
     @GetMapping("/listarFacturas")
     public String listarFacturas(Model model, @RequestParam(defaultValue = "numeroFactura") String orderBy,
-            @RequestParam(required = false) String buscarPor) {
+                                 @RequestParam(required = false) String buscarPor) {
         List<FacturaDb> listaFacturas;
         if (buscarPor != null && !buscarPor.isEmpty()) {
             listaFacturas = facturaService.buscarFacturas(buscarPor);
         } else {
             listaFacturas = facturaService.getListaFacturas(orderBy);
         }
+
+        // Obtener la autenticación actual y verificar si el usuario tiene el rol de administrador
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = auth.getAuthorities().stream()
+                              .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+        // Añadir el atributo "isAdmin" al modelo
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("facturas", listaFacturas);
         return "listaFacturas";
     }
@@ -113,6 +124,7 @@ public class FacturasController {
         return "visualizarFactura"; // vista de la factura
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/eliminar/factura/{numeroFactura}")
     public String mostrarFormularioEliminacion(@PathVariable String numeroFactura, Model model) {
         // obtener la factura por su número
@@ -123,6 +135,7 @@ public class FacturasController {
         return "formEliminarFactura";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/eliminar/factura/{numeroFactura}")
     public String eliminarFactura(@PathVariable String numeroFactura, RedirectAttributes attributes) {
         // obtener la factura por su número
